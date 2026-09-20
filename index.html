@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jasman Tan — Software Engineer, Singapore</title>
+<meta name="description" content="Software engineer in Singapore with 6+ years on business-critical systems: C#/.NET and T-SQL back ends, REST and SAP ERP integrations, and operator dashboards running across five manufacturing sites. Looking for a backend or full-stack role.">
+<meta name="author" content="Jasman Tan">
+<link rel="canonical" href="https://jasmantan.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jasman Tan">
+<meta property="og:title" content="Jasman Tan — Software Engineer, Singapore">
+<meta property="og:description" content="Software engineer in Singapore with 6+ years on business-critical systems: C#/.NET and T-SQL back ends, REST and SAP ERP integrations, and operator dashboards running across five manufacturing sites. Looking for a backend or full-stack role.">
+<meta property="og:url" content="https://jasmantan.com/">
+<meta property="og:image" content="https://jasmantan.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Jasman Tan — Software Engineer, Singapore">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fbfaf8" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/styles.css">
+<script>/* applied before first paint so a chosen theme never flashes */try{var t=localStorage.getItem('jt-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="wordmark" href="/">Jasman Tan</a>
+    <nav aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#infra">Infrastructure</a>
+      <a href="#skills">Skills</a>
+      <a href="#experience">Experience</a>
+      <a class="nav-keep" href="/resume/">Résumé</a>
+    </nav>
+    
+<button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+  <span class="visually-hidden">Switch between light and dark theme</span>
+  <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><g class="rays"><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></g></svg>
+  <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4a8.3 8.3 0 1 0 10.5 10.5z"/></svg>
+</button>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Software Engineer · Singapore</p>
+      <h1>Jasman Tan</h1>
+      <p class="lede">I build the unglamorous systems other people depend on: integration layers, databases that have to stay correct across time zones, and dashboards that factory operators use every shift.</p>
+      <p class="hero-body">Six years of that at an electronics manufacturer and a government-linked IT services firm — C#/.NET, T-SQL across a six-database SQL Server estate, and the SAP ERP integration that keeps five plants in four countries in sync. On my own time I ship smaller things end to end: a browser game, a party game with an AI referee, a credit-card optimiser, a home server that hosts all of it.</p>
+      <p class="seeking"><strong>Full-time · Hybrid or on-site · Singapore</strong><br>Open to backend or full-stack engineering roles.</p>
+      <p class="hero-actions">
+        <a class="btn btn-primary" href="https://kubrix.jasmantan.com" rel="noopener">Play Kubrix in your browser <span aria-hidden="true">→</span></a>
+        <a class="btn" href="/resume/">Résumé</a>
+        <a class="btn" href="mailto:jasmantan@hotmail.com">Email me</a>
+      </p>
+    </div>
+  </section>
+
+  <section id="work" class="section" aria-labelledby="work-h">
+    <div class="wrap">
+      <h2 id="work-h">Selected work</h2>
+      <p class="section-lede">Side projects, all of them running rather than half-finished. Several are private because they hold personal data; those are described, not linked.</p>
+      <div class="projects">
+        
+<article class="project project-featured" id="project-kubrix">
+  <header class="project-head">
+    <h3>Kubrix</h3>
+    <p class="tagline">A browser remake of a Game-of-the-Year student title — playable in one click.</p>
+    
+    <blockquote class="blurb"><p>Save the broken lands by restoring the shattered Kubrix. Play as the Witch Of The Forest as you go around the land, helping villagers reunite with their loved ones, interact with the environment and maybe ride on sheeps. All in the name of obtaining the shards of Kubrix to restore the land's stability.</p><cite>The original DigiPen game gallery</cite></blockquote>
+  </header>
+  
+    <aside class="awards" aria-label="Awards for Kubrix">
+      <h4>DigiPen Game Awards 2019</h4>
+      <p class="award-main">First Place — Claude Comair Grand Prize for Game of the Year</p>
+      <ul><li>Koei Tecmo Singapore Most Innovative Design</li><li>Finalist — Best Junior Game</li><li>Finalist — Acronis Best Team Spirit</li><li>Finalist — Acronis Best User Interface</li></ul>
+    </aside>
+  <div class="project-body">
+    <div class="pb"><h4>The problem</h4><p>Kubrix was built in 2019 by a nine-person DigiPen Singapore team on a custom C++ engine, and took First Place — the Claude Comair Grand Prize for Game of the Year — at the DigiPen Game Awards. I was one of its four programmers. It then became unrunnable: a Windows build, a 27 GB SVN repository and an engine nobody has compiled since.</p></div>
+    <div class="pb"><h4>What I built</h4><p>I rebuilt the game for the browser in Three.js from the original models, UI art, music and sound: the platforming and build-mode mechanics, a level pipeline that converts the original XML level and gameplay data to JSON, an OBJ/MTL-to-GLB model converter, checkpoints and localStorage saves, touch controls that switch on automatically on phones, and a quality toggle for weak GPUs. A dependency-free Node WebSocket relay lets you pair a phone by QR code and use it as a gamepad; the relay validates and rebuilds every message so a paired phone can only send controller input. A separate tool does an automated playthrough — walking, jumping and spending stars on bridges — to prove all five shards are still reachable after a level change.</p></div>
+    <div class="pb"><h4>Where it stands</h4><p>Runs as a fully static build with relative asset paths, self-hosted through Cloudflare Tunnel at kubrix.jasmantan.com. Loads on desktop, phone and TV.</p></div>
+    <p class="note">An unofficial fan remake by a member of the original team. Not affiliated with or endorsed by DigiPen; all art, audio and design belong to Team Whiteboard &amp; Markers.</p>
+    
+    <details class="credits">
+      <summary>Original team credits</summary>
+      <ul><li><span class="c-name">Peng Sng</span> <span class="c-role">Producer</span></li><li><span class="c-name">Wei Chin</span> <span class="c-role">Technical Lead</span></li><li><span class="c-name">Yong Lie</span> <span class="c-role">Design Lead</span></li><li><span class="c-name">Khet Sim</span> <span class="c-role">Programmer</span></li><li><span class="c-name">Zhanhao Leong</span> <span class="c-role">Programmer</span></li><li><span class="c-name">Sing Tan</span> <span class="c-role">Programmer</span></li><li><span class="c-name">Sian Cheong</span> <span class="c-role">Programmer</span></li><li><span class="c-name">Zheng Ong</span> <span class="c-role">Designer</span></li><li><span class="c-name">Dun Ong</span> <span class="c-role">Designer</span></li></ul>
+      <p class="note">Team Whiteboard &amp; Markers · DigiPen Institute of Technology Singapore · GAM 352 · released 4 December 2019. “Sing Tan” is me.</p>
+    </details>
+  </div>
+  <footer class="project-foot">
+    <ul class="stack" aria-label="Kubrix stack">
+      <li>Three.js</li>
+      <li>Vite</li>
+      <li>JavaScript</li>
+      <li>Node (WebSocket relay)</li>
+      <li>GLB / asset pipeline</li>
+    </ul>
+    <a class="btn btn-primary" href="https://kubrix.jasmantan.com" rel="noopener">Play it <span aria-hidden="true">→</span></a>
+  </footer>
+</article>
+
+<article class="project" id="project-camp-nightfall">
+  <header class="project-head">
+    <h3>Camp Nightfall</h3>
+    <p class="tagline">A phone-and-TV social deduction game refereed by an AI host instead of a person.</p>
+    
+    
+  </header>
+  
+  <div class="project-body">
+    <div class="pb"><h4>The problem</h4><p>Social deduction games like Blood on the Clocktower need one person to run them, and that person never gets to play. I wanted a version where the referee is software.</p></div>
+    <div class="pb"><h4>What I built</h4><p>A TypeScript monorepo serving three surfaces from one process: a private phone view, a shared TV view, and a PIN-gated host panel. Fastify 5 and Socket.IO for transport, React 19 on the client. The rules engine is a pure, deterministic package: game state is never stored, only an append-only action log plus the seed and settings, so the server replays a game from its log on boot and re-arms the phase timer — a mid-game crash or restart is survivable. Up to six seats can be AI players. Narration goes through an LLM with a 4-second timeout that falls back to offline templates, so the whole game still works with no internet at all.</p></div>
+    <div class="pb"><h4>Where it stands</h4><p>Live from the home server through Cloudflare Tunnel: phones open /play, the TV opens /screen. One server process hosts one game at a time — it is an evening with friends, not a public multiplayer service.</p></div>
+    
+    
+  </div>
+  <footer class="project-foot">
+    <ul class="stack" aria-label="Camp Nightfall stack">
+      <li>TypeScript</li>
+      <li>Fastify</li>
+      <li>Socket.IO</li>
+      <li>React</li>
+      <li>SQLite</li>
+      <li>Vite</li>
+    </ul>
+    <a class="btn " href="https://nightfall.jasmantan.com" rel="noopener">Open the game <span aria-hidden="true">→</span></a>
+  </footer>
+</article>
+
+<article class="project" id="project-card-optimizer">
+  <header class="project-head">
+    <h3>Card Optimizer</h3>
+    <p class="tagline">Singapore credit-card optimiser: statement ingest, categorisation, and an assistant that can actually change things.</p>
+    <p class="badges"><span class="badge badge-private">Private — self-hosted</span></p>
+    
+  </header>
+  
+  <div class="project-body">
+    <div class="pb"><h4>The problem</h4><p>Singapore reward cards have overlapping bonus categories and monthly spend caps, and the only honest way to know which card to use is to look at what you actually spent.</p></div>
+    <div class="pb"><h4>What I built</h4><p>A FastAPI and SQLite app that ingests bank and card statement exports — including scanned PDFs, via Tesseract OCR — categorises transactions, tracks spend caps and bonus thresholds, runs budgets and reports, and recommends which cards to keep, cancel or apply for against a curated catalogue. Telegram and Discord bots for on-the-go queries. On top of that, an LLM assistant with tool use over the app's own functions: it reads and writes through the same code paths the UI uses, confirms before every write, supports undo, and keeps an editable memory file of the owner's rulings. It runs against either an API key or a signed-in Claude Code CLI.</p></div>
+    <div class="pb"><h4>Where it stands</h4><p>In daily personal use. Self-hosted and private — it sits behind Cloudflare Access with an allow-list of one.</p></div>
+    
+    
+  </div>
+  <footer class="project-foot">
+    <ul class="stack" aria-label="Card Optimizer stack">
+      <li>Python</li>
+      <li>FastAPI</li>
+      <li>SQLite</li>
+      <li>Tesseract OCR</li>
+      <li>LLM tool use</li>
+    </ul>
+    
+  </footer>
+</article>
+
+<article class="project" id="project-jobgrab">
+  <header class="project-head">
+    <h3>Jobgrab</h3>
+    <p class="tagline">A job aggregator and matcher for the Singapore software market.</p>
+    <p class="badges"><span class="badge badge-private">Private — self-hosted</span></p>
+    
+  </header>
+  
+  <div class="project-body">
+    <div class="pb"><h4>The problem</h4><p>Job boards optimise for volume. Looking for a specific kind of role means re-reading the same postings across four sites every day.</p></div>
+    <div class="pb"><h4>What I built</h4><p>A Python tool — standard library only, no dependencies — that pulls postings from four sources (the MyCareersFuture API, LinkedIn, Careers@Gov and employer feeds), deduplicates them, and scores each one against a structured profile with an explicit weighted formula over scope, salary, location and employer type. Salary resolves in a defined order: an officially posted range first, then a researched multi-source company band, then an assumption by employer type — and an estimate is never allowed to exclude a job on its own. Results are served as one interactive page from a local HTTP server, with application tracking and LLM-drafted cover letters.</p></div>
+    <div class="pb"><h4>Where it stands</h4><p>Around 7,700 postings ingested and scored. Private by necessity — the generated page embeds a full resume and personal application notes.</p></div>
+    
+    
+  </div>
+  <footer class="project-foot">
+    <ul class="stack" aria-label="Jobgrab stack">
+      <li>Python (stdlib only)</li>
+      <li>HTTP scraping / APIs</li>
+      <li>Scoring model</li>
+      <li>LLM CLI</li>
+    </ul>
+    
+  </footer>
+</article>
+
+<article class="project" id="project-the-signal">
+  <header class="project-head">
+    <h3>The Signal</h3>
+    <p class="tagline">A self-hosted AI-news dashboard that reads ~37 feeds so I do not have to.</p>
+    <p class="badges"><span class="badge badge-private">Private — self-hosted</span></p>
+    
+  </header>
+  
+  <div class="project-body">
+    <div class="pb"><h4>The problem</h4><p>AI news is spread across vendor blogs, arXiv, Hacker News, Reddit and a dozen outlets that all cover the same story within an hour of each other.</p></div>
+    <div class="pb"><h4>What I built</h4><p>A Flask server that keeps ~37 feeds pre-fetched in a background loop and persists the cache to disk, so the page opens instantly and a restart resumes from the last known items instead of hammering every source at once. A curator loop scores items through an LLM, pre-writes summaries, and rewrites a plain-text &quot;taste&quot; file that the scoring reads back — so rating things nudges future picks. The same story from several outlets collapses into one card naming the others, and a deduplicated Top 10 is the default view on phones. A morning push sends the day's picks over ntfy.</p></div>
+    <div class="pb"><h4>Where it stands</h4><p>Runs continuously on the home server behind Cloudflare Access. No database — all state is JSON files next to the app.</p></div>
+    
+    
+  </div>
+  <footer class="project-foot">
+    <ul class="stack" aria-label="The Signal stack">
+      <li>Python</li>
+      <li>Flask</li>
+      <li>Feed parsing</li>
+      <li>LLM curation</li>
+      <li>ntfy</li>
+    </ul>
+    
+  </footer>
+</article>
+
+<article class="project" id="project-baby-roadmap">
+  <header class="project-head">
+    <h3>Baby Roadmap</h3>
+    <p class="tagline">A pregnancy and baby tracker for two parents to keep in sync.</p>
+    
+    
+  </header>
+  
+  <div class="project-body">
+    <div class="pb"><h4>The problem</h4><p>New parents in Singapore keep the same information in three places: a development timeline, a feed and sleep diary, and a pile of half-remembered advice.</p></div>
+    <div class="pb"><h4>What I built</h4><p>A single-page vanilla-JavaScript app — no framework, no build step — with a development timeline, a feed and sleep diary with pattern analysis, growth charts, a knowledge base and a family tree. Supabase provides Postgres and auth, with two parents syncing under a shared family code. Playwright end-to-end tests run over the real UI, and it deploys automatically on push to Cloudflare Pages.</p></div>
+    <div class="pb"><h4>Where it stands</h4><p>In daily use by two people. Installable as a PWA.</p></div>
+    
+    
+  </div>
+  <footer class="project-foot">
+    <ul class="stack" aria-label="Baby Roadmap stack">
+      <li>Vanilla JS</li>
+      <li>Supabase (Postgres, auth)</li>
+      <li>Playwright</li>
+      <li>Cloudflare Pages</li>
+    </ul>
+    <a class="btn " href="https://baby.jasmantan.com" rel="noopener">baby.jasmantan.com <span aria-hidden="true">→</span></a>
+  </footer>
+</article>
+      </div>
+    </div>
+  </section>
+
+  <section id="infra" class="section section-alt" aria-labelledby="infra-h">
+    <div class="wrap">
+      <h2 id="infra-h">The home server</h2>
+      <p class="section-lede">Everything above that is self-hosted runs on one Windows mini PC in my flat. It is a small operations problem, and I treat it like one.</p>
+      <ul class="infra-grid">
+        <li><h3>Public without opening a port</h3><p>All traffic arrives through a Cloudflare Tunnel, so the router has no inbound ports open and origin services bind to 127.0.0.1 only. Each hostname is an explicit ingress rule; the catch-all returns 404.</p></li>
+        <li><h3>Private by default</h3><p>The personal apps sit behind Cloudflare Zero Trust Access with a one-person allow-list and email one-time codes — so a guest needs no account to be let in, and no hostname is ever exposed through the tunnel before its Access application exists.</p></li>
+        <li><h3>Comes back by itself</h3><p>Each service is a logon-triggered scheduled task with its own start script. The machine signs in automatically on boot, so a power cut or a Windows update restores every site without me touching it.</p></li>
+        <li><h3>Backed up, and honest about it</h3><p>A nightly PowerShell job archives every app's data folder, the environment files and the tunnel config, keeps 14 days and writes a log. It lives on the same drive, which protects against my mistakes and not against a dead disk — an off-machine copy is the next job on the list.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="skills" class="section" aria-labelledby="skills-h">
+    <div class="wrap">
+      <h2 id="skills-h">Skills</h2>
+      <p class="section-lede">Things I have shipped with, not things I have read about.</p>
+      <div class="skills">
+        <div class="skill-group"><h3>Languages</h3><ul><li>C#</li><li>T-SQL / SQL</li><li>JavaScript</li><li>TypeScript</li><li>Python</li><li>PowerShell</li><li>C / C++</li><li>Java</li><li>Dart</li><li>GDScript</li></ul></div>
+        <div class="skill-group"><h3>Back end &amp; data</h3><ul><li>.NET</li><li>SQL Server</li><li>Stored procedures &amp; performance fixes</li><li>PostgreSQL / Supabase</li><li>REST APIs</li><li>SAP ERP integration</li><li>ETL-style reporting</li><li>Timezone-correct multi-site data</li></ul></div>
+        <div class="skill-group"><h3>Front end</h3><ul><li>HTML / CSS / JavaScript dashboards</li><li>React</li><li>Flutter (Android &amp; iOS)</li><li>Responsive multi-language UIs (6 locales)</li><li>Three.js</li></ul></div>
+        <div class="skill-group"><h3>Practice</h3><ul><li>Git &amp; GitHub</li><li>GitHub Actions (CI/CD, Pages)</li><li>Playwright end-to-end tests</li><li>Change request → production → verification</li><li>L1/L2/L3 production support</li><li>Technical &amp; functional documentation</li></ul></div>
+        <div class="skill-group"><h3>Operations</h3><ul><li>Cloudflare Tunnel &amp; Zero Trust Access</li><li>Scheduled services on Windows</li><li>Backup &amp; restore</li><li>Docker / Compose (in progress)</li></ul></div>
+        <div class="skill-group"><h3>AI tooling</h3><ul><li>LLM-assisted development workflows</li><li>Agentic scripts &amp; tool use</li><li>LLM API integration with offline fallbacks</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience" class="section section-alt" aria-labelledby="exp-h">
+    <div class="wrap">
+      <h2 id="exp-h">Experience</h2>
+      <ol class="timeline">
+        
+        <li class="job">
+          <div class="job-head">
+            <h3>Software Engineer, Manufacturing Systems</h3>
+            <p class="org">Interplex Precision Technology · Singapore</p>
+            <p class="period">Dec 2021 – present</p>
+          </div>
+          <ul><li>End-to-end delivery across a six-database SQL Server estate serving five plants in Singapore, Batam, the Czech Republic, China and India — requirements, T-SQL and workflow-engine implementation, dashboard front end, deployment and post-deploy verification.</li><li>Built and maintain the SAP ERP ↔ MES integration layer: goods issue and receipt, handling units, time-ticket outbound and the production-order inbound lifecycle, running across four countries.</li><li>Root-caused and fixed a production routing defect that was sending operator scans to the wrong work order, replacing iframe-focus heuristics with active-step resolution.</li><li>Built reporting dashboards over SQL Server — serial-number genealogy and traceability, per-operator labour, time-ticket and machine-timeline views — with plant-local time handling.</li><li>Designed a centralised six-language (EN/ID/CZ/ES/TA/ZH) translation system spanning dashboards and workflows, with Python tooling to sync translation sources.</li><li>L1/L2 support for HYDRA MES across the China and USA regions. MPDV Certified HYDRA 8 Developer.</li></ul>
+        </li>
+
+        <li class="job">
+          <div class="job-head">
+            <h3>Software Engineer</h3>
+            <p class="org">NCS Pte Ltd · Singapore</p>
+            <p class="period">Apr 2020 – Nov 2021</p>
+          </div>
+          <ul><li>Full-stack development, enhancement and maintenance of client applications in C#, HTML, JavaScript and SQL at a government-linked IT services firm.</li><li>Impact analysis, defect fixing, and technical design and functional specification documents.</li></ul>
+        </li>
+
+        <li class="job">
+          <div class="job-head">
+            <h3>Unity3D Developer (Intern)</h3>
+            <p class="org">Affinixy Pte Ltd · Singapore</p>
+            <p class="period">Apr 2019 – Dec 2019</p>
+          </div>
+          <ul><li>Shipped a mobile game to Android and iOS: core systems, AI, NavMesh pathfinding, gameplay and UI/UX direction.</li></ul>
+        </li>
+      </ol>
+
+      <h2 id="education-h" class="h2-sub">Education</h2>
+      <ul class="education">
+        <li><h3>BSc Computer Science &amp; Game Design</h3><p class="org">DigiPen Institute of Technology, Singapore</p><p class="period">2015 – 2020</p><p class="note">First Place — Claude Comair Grand Prize for Game of the Year, DigiPen Game Awards 2019, for Kubrix, as a gameplay programmer (custom ImGui editor).</p></li>
+        <li><h3>Diploma in Electronics, Computer &amp; Communications</h3><p class="org">Nanyang Polytechnic</p><p class="period">2010 – 2013</p></li>
+      </ul>
+
+      <p class="cta">
+        <a class="btn btn-primary" href="/resume/">Full résumé</a>
+        <a class="btn" href="/resume.pdf" download="Jasman-Tan-Resume.pdf">Download PDF</a>
+        <a class="btn" href="mailto:jasmantan@hotmail.com">jasmantan@hotmail.com</a>
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p class="footer-contact">
+      <a href="mailto:jasmantan@hotmail.com">jasmantan@hotmail.com</a>
+      <a href="https://github.com/JasmanTan1" rel="me noopener">GitHub</a>
+      <a href="https://linkedin.com/in/jasmantan" rel="me noopener">LinkedIn</a>
+      
+    </p>
+    <p class="muted small">Jasman Tan · Singapore · Built as a static site; the source is on GitHub.</p>
+  </div>
+</footer>
+<script src="/main.js" defer></script>
+</body>
+</html>
