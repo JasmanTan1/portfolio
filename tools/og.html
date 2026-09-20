@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OG image generator</title>
+<style>
+  body { margin: 0; background: #222; color: #ddd; font: 14px system-ui; padding: 20px; }
+  canvas { width: 600px; height: 315px; display: block; border: 1px solid #444; }
+  a { color: #e8a06a; }
+</style>
+</head>
+<body>
+<p>This regenerates <code>static/og.png</code> (1200&times;630), the link-preview image.
+   Open this file in a browser, then use the download link and replace <code>static/og.png</code>.</p>
+<canvas id="c" width="1200" height="630"></canvas>
+<p><a id="dl" download="og.png">Download og.png</a></p>
+<script>
+  const c = document.getElementById('c');
+  const x = c.getContext('2d');
+  const SANS = 'ui-sans-serif, system-ui, "Segoe UI", Helvetica, Arial, sans-serif';
+
+  x.fillStyle = '#0f1115';
+  x.fillRect(0, 0, 1200, 630);
+
+  // Flat shapes only — a gradient here balloons the PNG to ~500 kB and link
+  // previews are fetched on slow connections.
+  x.fillStyle = '#171a21';
+  x.beginPath();
+  x.moveTo(1200, 0); x.lineTo(1200, 630); x.lineTo(820, 630); x.closePath();
+  x.fill();
+
+  x.fillStyle = '#e8a06a';
+  x.fillRect(1196, 0, 4, 630);
+  x.fillRect(90, 120, 64, 5);
+
+  x.fillStyle = '#e9e7e3';
+  x.font = '650 84px ' + SANS;
+  x.fillText('Jasman Tan', 90, 250);
+
+  x.fillStyle = '#a7a89f';
+  x.font = '400 36px ' + SANS;
+  x.fillText('Software engineer · Singapore', 90, 312);
+
+  x.fillStyle = '#e9e7e3';
+  x.font = '400 30px ' + SANS;
+  const lines = [
+    'Backend and integration work on business-critical systems:',
+    'C#/.NET, T-SQL, SAP ERP integrations, operator dashboards',
+    'across five manufacturing sites — plus what I ship on my own.'
+  ];
+  lines.forEach((l, i) => x.fillText(l, 90, 400 + i * 44));
+
+  x.fillStyle = '#a7a89f';
+  x.font = '400 28px ' + SANS;
+  x.fillText('jasmantan.com', 90, 565);
+
+  document.getElementById('dl').href = c.toDataURL('image/png');
+</script>
+</body>
+</html>
