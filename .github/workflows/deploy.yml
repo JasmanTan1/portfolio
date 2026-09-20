@@ -1,0 +1,59 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Allow the workflow to publish Pages, and nothing else.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; don't cancel a run that is already publishing.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # No dependencies to install — build.mjs is plain Node.
+      - name: Build
+        run: node build.mjs
+
+      # static/resume.pdf is committed, so the runner never needs Chrome.
+      # Regenerate it locally with `npm run pdf` when content/resume.md changes.
+      - name: Check the build produced what we expect
+        run: |
+          set -e
+          for f in index.html resume/index.html resume.pdf resume.md 404.html \
+                   styles.css main.js og.png favicon.svg CNAME .nojekyll \
+                   sitemap.xml robots.txt; do
+            test -s "dist/$f" || { echo "missing or empty: dist/$f"; exit 1; }
+          done
+          grep -q 'jasmantan.com' dist/CNAME
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

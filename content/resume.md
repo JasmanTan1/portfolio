@@ -36,7 +36,7 @@ jasmantan@hotmail.com · linkedin.com/in/jasmantan · github.com/JasmanTan1 · S
 - **Mobile games (Godot 4, GDScript)** — several one-thumb Android prototypes with gesture recognition, procedural content and Python build tooling.
 
 ## Education
-- BSc Computer Science & Game Design — DigiPen Institute of Technology, Singapore, 2015–2020. DigiPen Game of the Year 2019 (Kubrix, gameplay programmer, custom ImGui editor).
+- BSc Computer Science & Game Design — DigiPen Institute of Technology, Singapore, 2015–2020. First Place — Claude Comair Grand Prize for Game of the Year, DigiPen Game Awards 2019 (Kubrix, gameplay programmer, custom ImGui editor).
 - Diploma in Electronics, Computer & Communications — Nanyang Polytechnic, 2010–2013.
 
 ## Languages

@@ -196,7 +196,44 @@ code { font-family: var(--mono); font-size: .9em; background: var(--bg-alt); pad
   font-weight: 640; padding: .2rem .55rem; border-radius: 999px;
   background: var(--accent-soft); color: var(--text); border: 1px solid var(--border);
 }
+.blurb {
+  margin: 1rem 0 0; padding: .1rem 0 .1rem 1rem;
+  border-left: 2px solid var(--border-strong); max-width: 68ch;
+}
+.blurb p { font-style: italic; color: var(--text-muted); margin-bottom: .3rem; }
+.blurb cite { font-style: normal; font-size: .8rem; color: var(--text-muted); }
+
+.awards {
+  margin-top: 1.4rem; padding: 1rem 1.15rem;
+  background: var(--accent-soft); border: 1px solid var(--border); border-radius: 10px;
+}
+.awards h4 { margin-bottom: .35rem; }
+.award-main { font-weight: 640; margin-bottom: .5rem; }
+.awards ul {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: .35rem .5rem;
+}
+.awards ul li {
+  font-size: .85rem; color: var(--text-muted);
+  border: 1px solid var(--border-strong); border-radius: 999px; padding: .12rem .6rem;
+}
+
+.credits { margin-top: .4rem; }
+.credits summary {
+  cursor: pointer; font-size: .85rem; color: var(--text-muted);
+  font-weight: 600; padding: .25rem 0;
+}
+.credits summary:hover { color: var(--text); }
+.credits ul {
+  list-style: none; margin: .7rem 0; padding: 0;
+  display: grid; gap: .25rem .9rem; font-size: .9rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+.c-name { font-weight: 600; }
+.c-role { color: var(--text-muted); }
+
 .project-body { display: grid; gap: 1.1rem; margin: 1.4rem 0; }
+.project-body > .note, .project-body > .credits { grid-column: 1 / -1; }
 @media (min-width: 60rem) {
   .project-featured .project-body { grid-template-columns: 1fr 1.5fr 1fr; gap: 1.6rem; }
 }

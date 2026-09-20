@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
+    "pdf": "node build.mjs && node tools/make-pdf.mjs && node build.mjs",
+    "og": "node tools/make-og.mjs",
     "serve": "node serve.mjs",
     "dev": "node build.mjs && node serve.mjs"
   },

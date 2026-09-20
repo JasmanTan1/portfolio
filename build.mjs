@@ -14,6 +14,10 @@ const dist = join(root, 'dist');
 rmSync(dist, { recursive: true, force: true });
 mkdirSync(dist, { recursive: true });
 
+// The PDF is optional: if tools/make-pdf.mjs hasn't run (or found no Chrome),
+// the pages offer printing instead of a link that would 404.
+const hasPdf = existsSync(join(root, 'static', 'resume.pdf'));
+
 /* ---------------------------------------------------------------- helpers */
 
 const head = ({ title, description, path = '/' }) => `<!doctype html>
@@ -77,18 +81,39 @@ function projectCard(p, i) {
       ? `<span class="btn btn-disabled" aria-disabled="true">${esc(p.link.label)}</span>`
       : '';
 
+  const awards = p.awards
+    ? `
+    <aside class="awards" aria-label="Awards for ${esc(p.name)}">
+      <h4>${esc(p.awards.heading)}</h4>
+      <p class="award-main">${esc(p.awards.main)}</p>
+      <ul>${p.awards.others.map((a) => `<li>${esc(a)}</li>`).join('')}</ul>
+    </aside>`
+    : '';
+
+  const credits = p.credits
+    ? `
+    <details class="credits">
+      <summary>Original team credits</summary>
+      <ul>${p.credits.map(([n, r]) => `<li><span class="c-name">${esc(n)}</span> <span class="c-role">${esc(r)}</span></li>`).join('')}</ul>
+      <p class="note">${esc(p.creditsNote)}</p>
+    </details>`
+    : '';
+
   return `
 <article class="project${p.featured ? ' project-featured' : ''}" id="project-${p.id}">
   <header class="project-head">
     <h3>${esc(p.name)}</h3>
     <p class="tagline">${esc(p.tagline)}</p>
     ${badges.length ? `<p class="badges">${badges.join(' ')}</p>` : ''}
+    ${p.blurb ? `<blockquote class="blurb"><p>${esc(p.blurb)}</p><cite>The original DigiPen game gallery</cite></blockquote>` : ''}
   </header>
+  ${awards}
   <div class="project-body">
     <div class="pb"><h4>The problem</h4><p>${esc(p.problem)}</p></div>
     <div class="pb"><h4>What I built</h4><p>${esc(p.built)}</p></div>
     <div class="pb"><h4>Where it stands</h4><p>${esc(p.outcome)}</p></div>
     ${p.note ? `<p class="note">${esc(p.note)}</p>` : ''}
+    ${credits}
   </div>
   <footer class="project-foot">
     <ul class="stack" aria-label="${esc(p.name)} stack">
@@ -127,7 +152,7 @@ const indexHtml = `${head({
       <h1>${esc(SITE.name)}</h1>
       <p class="lede">${esc(HERO.lede)}</p>
       <p class="hero-body">${esc(HERO.body)}</p>
-      <p class="seeking"><strong>Currently:</strong> ${esc(HERO.seeking)}</p>
+      <p class="seeking"><strong>${esc(HERO.seeking)}</strong><br>${esc(HERO.seekingLabel)}</p>
       <p class="hero-actions">
         <a class="btn btn-primary" href="https://kubrix.jasmantan.com" rel="noopener">Play Kubrix in your browser <span aria-hidden="true">→</span></a>
         <a class="btn" href="/resume/">Résumé</a>
@@ -188,6 +213,7 @@ const indexHtml = `${head({
 
       <p class="cta">
         <a class="btn btn-primary" href="/resume/">Full résumé</a>
+        ${hasPdf ? `<a class="btn" href="/resume.pdf" download="Jasman-Tan-Resume.pdf">Download PDF</a>` : ''}
         <a class="btn" href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>
       </p>
     </div>
@@ -219,9 +245,10 @@ const resumeHtml = `${head({
 </header>
 <div class="resume-bar no-print">
   <div class="wrap">
-    <p>This page is the résumé. <strong>Print it, or save it as PDF</strong> — the print stylesheet lays it out for A4 with no navigation or colour.</p>
+    <p>This page is the résumé.${hasPdf ? ' The PDF is printed from this very page, so the two can never disagree.' : ' <strong>Print it, or save it as PDF</strong> — the print stylesheet lays it out for A4 with no navigation or colour.'}</p>
     <p class="resume-bar-actions">
-      <button class="btn btn-primary" type="button" id="print-resume">Save as PDF / print</button>
+      ${hasPdf ? `<a class="btn btn-primary" href="/resume.pdf" download="Jasman-Tan-Resume.pdf">Download PDF</a>` : ''}
+      <button class="btn${hasPdf ? '' : ' btn-primary'}" type="button" id="print-resume">${hasPdf ? 'Print' : 'Save as PDF / print'}</button>
       <a class="btn" href="/resume.md" download="jasman-tan-resume.md">Markdown source</a>
     </p>
   </div>
