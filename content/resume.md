@@ -20,7 +20,7 @@ jasmantan@hotmail.com · linkedin.com/in/jasmantan · github.com/JasmanTan1 · S
 - Built production reporting dashboards in HTML/JavaScript over SQL Server: serial-number genealogy and traceability, per-operator labour, time-ticket and machine-timeline views, with plant-local time handling.
 - Designed a centralised 6-language (EN/ID/CZ/ES/TA/ZH) translation system spanning dashboards and workflows, with Python tooling to sync translation sources.
 - Wrote Python and PowerShell tooling for installers, schema checks and release bundles; author change requests, patch notes and runbooks used by site engineers.
-- L1/L2 support for HYDRA MES across China and USA regions; MPDV Certified HYDRA 8 Developer.
+- L1/L2 support for HYDRA MES across China and USA regions.
 
 ### Software Engineer — NCS Pte Ltd (government-linked IT services), Singapore · Apr 2020 – Nov 2021
 - Full-stack development, enhancement and maintenance of client applications in C#, HTML, JavaScript and SQL.
@@ -34,6 +34,10 @@ jasmantan@hotmail.com · linkedin.com/in/jasmantan · github.com/JasmanTan1 · S
 - **jobgrab** — Python job-matching tool: pulls postings from four sources (MyCareersFuture API, LinkedIn, Careers@Gov, employer feeds), scores them against a skills profile, serves an interactive HTML UI from a local HTTP server, and drafts cover letters through an LLM CLI.
 - **Ennovi Arcstone app** — Flutter/Dart mobile client for a manufacturing system (Android/iOS).
 - **Mobile games (Godot 4, GDScript)** — several one-thumb Android prototypes with gesture recognition, procedural content and Python build tooling.
+
+## Certifications
+- **Arcstone System Assessment — Intermediate** — Arcstone Pte. Ltd., July 2025. arc.ops MES end-to-end configuration. Certificate ID ARC-SA-2025-002.
+- **MPDV Certified HYDRA 8 Developer** — MPDV.
 
 ## Education
 - BSc Computer Science & Game Design — DigiPen Institute of Technology, Singapore, 2015–2020. First Place — Claude Comair Grand Prize for Game of the Year, DigiPen Game Awards 2019 (Kubrix, gameplay programmer, custom ImGui editor).

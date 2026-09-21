@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 import { renderMarkdown, esc } from './src/markdown.mjs';
 import {
-  CONTACT_EMAIL, SITE, HERO, PROJECTS, INFRA, SKILLS, EXPERIENCE, EDUCATION,
+  CONTACT_EMAIL, SITE, HERO, PROJECTS, INFRA, SKILLS, EXPERIENCE, CERTIFICATIONS, EDUCATION,
 } from './src/data.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
@@ -205,6 +205,11 @@ const indexHtml = `${head({
           <ul>${e.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>
         </li>`).join('\n')}
       </ol>
+
+      <h2 id="certifications-h" class="h2-sub">Certifications</h2>
+      <ul class="education">
+        ${CERTIFICATIONS.map((c) => `<li><h3>${esc(c.what)}</h3><p class="org">${esc(c.where)}</p>${c.period ? `<p class="period">${esc(c.period)}</p>` : ''}${c.note ? `<p class="note">${esc(c.note)}</p>` : ''}</li>`).join('\n        ')}
+      </ul>
 
       <h2 id="education-h" class="h2-sub">Education</h2>
       <ul class="education">

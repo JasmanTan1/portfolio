@@ -201,7 +201,7 @@ export const EXPERIENCE = [
       'Root-caused and fixed a production routing defect that was sending operator scans to the wrong work order, replacing iframe-focus heuristics with active-step resolution.',
       'Built reporting dashboards over SQL Server — serial-number genealogy and traceability, per-operator labour, time-ticket and machine-timeline views — with plant-local time handling.',
       'Designed a centralised six-language (EN/ID/CZ/ES/TA/ZH) translation system spanning dashboards and workflows, with Python tooling to sync translation sources.',
-      'L1/L2 support for HYDRA MES across the China and USA regions. MPDV Certified HYDRA 8 Developer.',
+      'L1/L2 support for HYDRA MES across the China and USA regions.',
     ],
   },
   {
@@ -220,6 +220,22 @@ export const EXPERIENCE = [
     place: 'Singapore',
     period: 'Apr 2019 – Dec 2019',
     points: ['Shipped a mobile game to Android and iOS: core systems, AI, NavMesh pathfinding, gameplay and UI/UX direction.'],
+  },
+];
+
+// Vendor certifications sit in their own block rather than buried in a job's
+// bullets, because a recruiter scanning for "MES" wants to find them at a
+// glance.
+export const CERTIFICATIONS = [
+  {
+    what: 'Arcstone System Assessment — Intermediate',
+    where: 'Arcstone Pte. Ltd.',
+    period: 'July 2025',
+    note: 'arc.ops MES end-to-end configuration. Certificate ID ARC-SA-2025-002.',
+  },
+  {
+    what: 'Certified HYDRA 8 Developer',
+    where: 'MPDV',
   },
 ];
 
