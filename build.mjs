@@ -2,6 +2,10 @@
 import { mkdirSync, readFileSync, writeFileSync, cpSync, rmSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
+
+// Browsers keep old copies of styles.css/main.js; a content hash in the URL forces a refetch.
+const ver = (f) => createHash('sha1').update(readFileSync(new URL('./static/' + f, import.meta.url))).digest('hex').slice(0, 8);
 
 import { renderMarkdown, esc } from './src/markdown.mjs';
 import {
@@ -65,7 +69,7 @@ const head = ({ title, description, path = '/' }) => `<!doctype html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/styles.css?v=${ver('styles.css')}">
 <link rel="alternate" type="text/markdown" href="/resume.md" title="Résumé (Markdown)">
 ${path === '/' || path === '/resume/' ? `<link rel="alternate" type="application/pdf" href="/resume.pdf" title="Résumé (PDF)">
 <script type="application/ld+json">${personLd}</script>` : ''}
@@ -92,7 +96,7 @@ const footer = (extra = '') => `
     <p class="muted small">${esc(SITE.name)} · ${esc(SITE.location)} · Built as a static site; the source is on GitHub.</p>
   </div>
 </footer>
-<script src="/main.js" defer></script>
+<script src="/main.js?v=${ver('main.js')}" defer></script>
 </body>
 </html>`;
 
