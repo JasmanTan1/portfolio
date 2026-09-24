@@ -166,7 +166,7 @@ const indexHtml = `${head({
       <h2 id="work-h">Selected work</h2>
       <p class="section-lede">Side projects, all of them running rather than half-finished. Several are private because they hold personal data; those are described, not linked.</p>
       <div class="projects">
-        ${PROJECTS.map(projectCard).join('\n')}
+        ${PROJECTS.filter((p) => !p.hidden).map(projectCard).join('\n')}
       </div>
     </div>
   </section>

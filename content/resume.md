@@ -31,7 +31,6 @@ jasmantan@hotmail.com · linkedin.com/in/jasmantan · github.com/JasmanTan1 · S
 
 ## Independent projects (2026, github.com/JasmanTan1)
 - **Baby Roadmap** — single-page web app for new parents: development timeline, feed/sleep diary with pattern analysis, growth charts, knowledge base and family tree. Vanilla JavaScript front end; Supabase (PostgreSQL, auth) syncing two parents under a shared family code; Playwright end-to-end tests; deployed on GitHub Pages.
-- **jobgrab** — Python job-matching tool: pulls postings from four sources (MyCareersFuture API, LinkedIn, Careers@Gov, employer feeds), scores them against a skills profile, serves an interactive HTML UI from a local HTTP server, and drafts cover letters through an LLM CLI.
 - **Ennovi Arcstone app** — Flutter/Dart mobile client for a manufacturing system (Android/iOS).
 - **Mobile games (Godot 4, GDScript)** — several one-thumb Android prototypes with gesture recognition, procedural content and Python build tooling.
 

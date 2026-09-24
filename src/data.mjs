@@ -100,6 +100,7 @@ export const PROJECTS = [
   },
   {
     id: 'jobgrab',
+    hidden: true, // kept for later; off the public site on request
     name: 'Jobgrab',
     tagline: 'A job aggregator and matcher for the Singapore software market.',
     private: true,
