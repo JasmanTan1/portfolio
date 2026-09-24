@@ -142,6 +142,29 @@ export const PROJECTS = [
   },
 ];
 
+// "What I do" cards on the home page. Each line restates something already
+// said in EXPERIENCE, PROJECTS or INFRA — nothing new.
+export const DOING = [
+  {
+    icon: 'db',
+    h: 'Backend & Data',
+    p: 'T-SQL across a six-database SQL Server estate at work; Python, FastAPI and SQLite in my own apps.',
+    tags: ['SQL Server', 'Python', 'FastAPI'],
+  },
+  {
+    icon: 'link',
+    h: 'Systems Integration',
+    p: 'I built and maintain the SAP ERP ⇄ MES integration layer that keeps five plants in four countries in sync.',
+    tags: ['SAP ERP', 'MES', 'REST'],
+  },
+  {
+    icon: 'server',
+    h: 'Self-hosted Infra',
+    p: 'A home server that publishes apps through Cloudflare Tunnel with no open ports, restarts itself and backs up nightly.',
+    tags: ['Windows', 'Cloudflare', 'PowerShell'],
+  },
+];
+
 export const INFRA = {
   title: 'The home server',
   lede:
@@ -199,6 +222,7 @@ export const EXPERIENCE = [
     org: 'Interplex Precision Technology',
     place: 'Singapore',
     period: 'Dec 2021 – present',
+    summary: 'End-to-end delivery across a six-database SQL Server estate serving five plants, plus the SAP ERP ↔ MES integration layer that runs across four countries.',
     tags: ['T-SQL', 'SQL Server', 'SAP ERP integration', 'HTML / JavaScript', 'Python', 'PowerShell', 'HYDRA MES'],
     points: [
       'End-to-end delivery across a six-database SQL Server estate serving five plants in Singapore, Batam, the Czech Republic, China and India — requirements, T-SQL and workflow-engine implementation, dashboard front end, deployment and post-deploy verification.',
@@ -214,6 +238,7 @@ export const EXPERIENCE = [
     org: 'NCS Pte Ltd',
     place: 'Singapore',
     period: 'Apr 2020 – Nov 2021',
+    summary: 'Full-stack development, enhancement and maintenance of client applications at a government-linked IT services firm.',
     tags: ['C#', 'SQL', 'HTML', 'JavaScript'],
     points: [
       'Full-stack development, enhancement and maintenance of client applications in C#, HTML, JavaScript and SQL at a government-linked IT services firm.',
@@ -225,6 +250,7 @@ export const EXPERIENCE = [
     org: 'Affinixy Pte Ltd',
     place: 'Singapore',
     period: 'Apr 2019 – Dec 2019',
+    summary: 'Shipped a mobile game to Android and iOS: core systems, AI, NavMesh pathfinding, gameplay and UI/UX direction.',
     tags: ['Unity3D', 'Android', 'iOS'],
     points: ['Shipped a mobile game to Android and iOS: core systems, AI, NavMesh pathfinding, gameplay and UI/UX direction.'],
   },

@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 import { renderMarkdown, esc } from './src/markdown.mjs';
 import {
-  CONTACT_EMAIL, SITE, HERO, PROJECTS, INFRA, SKILLS, EXPERIENCE, CERTIFICATIONS, EDUCATION,
+  CONTACT_EMAIL, SITE, HERO, PROJECTS, INFRA, SKILLS, EXPERIENCE, CERTIFICATIONS, EDUCATION, DOING,
 } from './src/data.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
@@ -74,71 +74,92 @@ const footer = (extra = '') => `
 
 /* ------------------------------------------------------------------ index */
 
-function projectCard(p, i) {
-  const badges = [];
-  if (p.private) badges.push('<span class="badge badge-private">Private — self-hosted</span>');
-  if (p.link?.pending) badges.push('<span class="badge">Going live</span>');
+const ICONS = {
+  db: '<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5.5" rx="7.5" ry="2.8"/><path d="M4.5 5.5v6.5c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8V5.5"/><path d="M4.5 12v6.5c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8V12"/></svg>',
+  link: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4" width="7" height="6" rx="1.5"/><rect x="14.5" y="14" width="7" height="6" rx="1.5"/><path d="M9.5 7h4a3 3 0 0 1 3 3v4M14.5 17h-4a3 3 0 0 1-3-3v-4"/><path d="M14.8 12.2 16.5 14l1.7-1.8M9.2 11.8 7.5 10l-1.7 1.8"/></svg>',
+  server: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3.5" width="18" height="7" rx="1.8"/><rect x="3" y="13.5" width="18" height="7" rx="1.8"/><path d="M7 7h.01M7 17h.01M11 7h6M11 17h6"/></svg>',
+};
 
-  const action = p.link && !p.link.pending
-    ? `<a class="btn ${p.featured ? 'btn-primary' : ''}" href="${p.link.href}" rel="noopener">${esc(p.link.label)} <span aria-hidden="true">→</span></a>`
-    : p.link?.pending
-      ? `<span class="btn btn-disabled" aria-disabled="true">${esc(p.link.label)}</span>`
-      : '';
+// Decorative art for project cards that have no screenshot (hue per project).
+const art = (seed, hue) => {
+  const pts = [];
+  let s = seed;
+  const rnd = () => ((s = (s * 9301 + 49297) % 233280) / 233280);
+  for (let i = 0; i < 11; i++) pts.push([Math.round(20 + rnd() * 360), Math.round(20 + rnd() * 180)]);
+  const lines = [];
+  pts.forEach((a, i) => pts.slice(i + 1).forEach((b) => {
+    if (Math.hypot(a[0] - b[0], a[1] - b[1]) < 120) lines.push(`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"/>`);
+  }));
+  return `<svg class="card-art" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs><radialGradient id="g${seed}" cx="70%" cy="30%" r="80%"><stop offset="0" stop-color="hsl(${hue} 80% 55% / .45)"/><stop offset="1" stop-color="hsl(${hue} 80% 30% / 0)"/></radialGradient></defs>
+    <rect width="400" height="220" fill="url(#g${seed})"/>
+    <g stroke="hsl(${hue} 85% 65% / .35)" stroke-width="1">${lines.join('')}</g>
+    <g fill="hsl(${hue} 90% 70%)">${pts.map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${i % 3 ? 2 : 3.5}"/>`).join('')}</g>
+  </svg>`;
+};
 
-  const awards = p.awards
-    ? `
-    <aside class="awards" aria-label="Awards for ${esc(p.name)}">
-      <h4>${esc(p.awards.heading)}</h4>
-      <p class="award-main">${esc(p.awards.main)}</p>
-      <ul>${p.awards.others.map((a) => `<li>${esc(a)}</li>`).join('')}</ul>
-    </aside>`
-    : '';
+// Stylised mock of the Card Optimizer UI. Deliberately abstract: bars and
+// blocks, no amounts, no merchants — the real app holds private data.
+const cardOptimizerMock = `<svg class="mock" viewBox="0 0 640 400" role="img" aria-label="Illustration of the Card Optimizer dashboard layout (not real data)">
+  <rect x="0.5" y="0.5" width="639" height="399" rx="14" class="m-frame"/>
+  <rect x="0.5" y="0.5" width="639" height="34" rx="14" class="m-bar"/>
+  <circle cx="22" cy="18" r="5" class="m-dot"/><circle cx="40" cy="18" r="5" class="m-dot"/><circle cx="58" cy="18" r="5" class="m-dot"/>
+  <rect x="16" y="52" width="130" height="332" rx="10" class="m-panel"/>
+  ${[0, 1, 2, 3, 4, 5].map((i) => `<rect x="30" y="${70 + i * 34}" width="${i === 1 ? 100 : 80 + (i * 7) % 24}" height="12" rx="6" class="${i === 1 ? 'm-accent' : 'm-line'}"/>`).join('')}
+  ${[0, 1, 2].map((i) => `<rect x="${162 + i * 156}" y="52" width="142" height="84" rx="10" class="m-panel"/><rect x="${176 + i * 156}" y="68" width="60" height="9" rx="4.5" class="m-line"/><rect x="${176 + i * 156}" y="88" width="${90 - i * 14}" height="18" rx="6" class="${i === 0 ? 'm-accent' : 'm-strong'}"/><rect x="${176 + i * 156}" y="116" width="112" height="6" rx="3" class="m-track"/><rect x="${176 + i * 156}" y="116" width="${[84, 46, 98][i]}" height="6" rx="3" class="m-accent"/>`).join('')}
+  <rect x="162" y="150" width="298" height="234" rx="10" class="m-panel"/>
+  <rect x="178" y="166" width="90" height="9" rx="4.5" class="m-line"/>
+  ${[62, 110, 84, 146, 96, 128, 70, 156, 118, 92].map((h, i) => `<rect x="${184 + i * 27}" y="${366 - h}" width="15" height="${h}" rx="3" class="${i === 7 ? 'm-accent' : 'm-col'}"/>`).join('')}
+  <rect x="474" y="150" width="150" height="234" rx="10" class="m-panel"/>
+  ${[0, 1, 2, 3, 4].map((i) => `<rect x="488" y="${168 + i * 42}" width="26" height="26" rx="7" class="${i === 0 ? 'm-accent' : 'm-strong'}"/><rect x="522" y="${172 + i * 42}" width="${70 - (i * 11) % 30}" height="8" rx="4" class="m-line"/><rect x="522" y="${185 + i * 42}" width="44" height="6" rx="3" class="m-track"/>`).join('')}
+</svg>`;
 
-  const credits = p.credits
-    ? `
-    <details class="credits">
-      <summary>Original team credits</summary>
-      <ul>${p.credits.map(([n, r]) => `<li><span class="c-name">${esc(n)}</span> <span class="c-role">${esc(r)}</span></li>`).join('')}</ul>
-      <p class="note">${esc(p.creditsNote)}</p>
-    </details>`
-    : '';
+const tags = (list, label) => `<ul class="stack" aria-label="${esc(label)}">${list.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`;
 
-  return `
-<article class="project${p.featured ? ' project-featured' : ''}" id="project-${p.id}">
-  <header class="project-head">
-    <h3>${esc(p.name)}</h3>
-    <p class="tagline">${esc(p.tagline)}</p>
-    ${badges.length ? `<p class="badges">${badges.join(' ')}</p>` : ''}
-    ${p.blurb ? `<blockquote class="blurb"><p>${esc(p.blurb)}</p><cite>The original DigiPen game gallery</cite></blockquote>` : ''}
-  </header>
-  ${awards}
-  <div class="project-body">
-    <div class="pb"><h4>The problem</h4><p>${esc(p.problem)}</p></div>
-    <div class="pb"><h4>What I built</h4><p>${esc(p.built)}</p></div>
-    <div class="pb"><h4>Where it stands</h4><p>${esc(p.outcome)}</p></div>
-    ${p.note ? `<p class="note">${esc(p.note)}</p>` : ''}
-    ${credits}
-  </div>
-  <footer class="project-foot">
-    <ul class="stack" aria-label="${esc(p.name)} stack">
-      ${p.stack.map((s) => `<li>${esc(s)}</li>`).join('\n      ')}
-    </ul>
-    ${action}
-  </footer>
-</article>`;
-}
-
-// Big two-line section title: small first word, huge second line.
-const sectionTitle = (id, top, bottom, num) => `
-      <header class="section-head">
-        <p class="section-num" aria-hidden="true">${num}</p>
+const sectionHead = (id, top, bottom, lede = '') => `
+      <header class="section-head reveal">
         <h2 id="${id}"><span class="st-top">${esc(top)}</span> <span class="st-bottom">${esc(bottom)}</span></h2>
+        ${lede ? `<p class="section-lede">${esc(lede)}</p>` : ''}
       </header>`;
 
-const tagList = (tags, label) => `<ul class="stack" aria-label="${esc(label)}">${tags.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`;
+const details = (p) => `
+      <details class="more">
+        <summary>How it works</summary>
+        <div class="more-body">
+          <p><strong>The problem.</strong> ${esc(p.problem)}</p>
+          <p><strong>What I built.</strong> ${esc(p.built)}</p>
+          <p><strong>Where it stands.</strong> ${esc(p.outcome)}</p>
+          ${p.note ? `<p class="note">${esc(p.note)}</p>` : ''}
+          ${p.credits ? `<p class="small muted">Original team: ${p.credits.map(([n, r]) => `${esc(n)} (${esc(r)})`).join(', ')}. ${esc(p.creditsNote)}</p>` : ''}
+        </div>
+      </details>`;
+
+const ARTS = { 'camp-nightfall': [7, 265], 'the-signal': [23, 190], 'baby-roadmap': [41, 330] };
+
+function smallCard(p) {
+  const media = p.id === 'kubrix'
+    ? `<img class="card-img" src="/img/kubrix.png" alt="Kubrix in the browser: a voxel waterfall level called Lunor Falls" loading="lazy" width="1264" height="625">`
+    : art(...(ARTS[p.id] || [3, 187]));
+  const action = p.link && !p.link.pending
+    ? `<a class="card-link" href="${p.link.href}" rel="noopener">${esc(p.link.label)} <span aria-hidden="true">↗</span></a>`
+    : p.private ? '<span class="badge">Private · self-hosted</span>' : '';
+  return `
+    <article class="card pcard reveal" id="project-${p.id}">
+      <div class="card-media">${media}</div>
+      <div class="card-body">
+        <h3>${esc(p.name)}</h3>
+        <p class="tagline">${esc(p.tagline)}</p>
+        ${p.awards ? `<p class="award-line"><span aria-hidden="true">★</span> ${esc(p.awards.main)} · ${esc(p.awards.heading)}</p>` : ''}
+        ${tags(p.stack, `${p.name} stack`)}
+        <div class="card-foot">${action}</div>
+        ${details(p)}
+      </div>
+    </article>`;
+}
 
 const visible = PROJECTS.filter((p) => !p.hidden);
-const engProjects = visible.filter((p) => p.group !== 'games');
+const featured = visible.find((p) => p.id === 'card-optimizer');
+const engProjects = visible.filter((p) => p.group !== 'games' && p !== featured);
 const games = visible.filter((p) => p.group === 'games');
 
 const indexHtml = `${head({
@@ -146,16 +167,15 @@ const indexHtml = `${head({
   description: SITE.description,
   path: '/',
 })}
-<body>
+<body class="home">
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="topbar">
   <div class="wrap topbar-inner">
     ${wordmark}
     <nav aria-label="Sections">
-      <a href="#experience"><span class="nav-slash" aria-hidden="true">//</span> experience</a>
+      <a href="#do"><span class="nav-slash" aria-hidden="true">//</span> what i do</a>
       <a href="#work"><span class="nav-slash" aria-hidden="true">//</span> projects</a>
-      <a href="#skills"><span class="nav-slash" aria-hidden="true">//</span> skills</a>
-      <a href="#also"><span class="nav-slash" aria-hidden="true">//</span> also built</a>
+      <a href="#experience"><span class="nav-slash" aria-hidden="true">//</span> experience</a>
       <a class="nav-keep" href="/resume/"><span class="nav-slash" aria-hidden="true">//</span> résumé</a>
     </nav>
     ${themeToggle}
@@ -163,99 +183,109 @@ const indexHtml = `${head({
 </header>
 
 <main id="main">
-  <section class="hero">
+  <section class="hero" aria-labelledby="hero-name">
     <canvas class="hero-net" aria-hidden="true"></canvas>
-    <div class="wrap hero-inner">
-      <p class="eyebrow"><span class="prompt" aria-hidden="true">&gt;</span> ${esc(SITE.role.toLowerCase())} · ${esc(SITE.location.toLowerCase())}</p>
-      <h1 class="hero-name">${esc(SITE.name)}<span class="accent" aria-hidden="true">.</span></h1>
+    <div class="hero-inner">
+      <p class="chip"><span class="chip-dot" aria-hidden="true"></span>// status: open to roles</p>
+      <h1 id="hero-name" class="hero-name">${esc(SITE.name)}</h1>
       <p class="headline">${esc(HERO.headline)}</p>
-      <p class="lede">${esc(HERO.lede)}</p>
-      <p class="hero-body">${esc(HERO.body)}</p>
-      <p class="seeking"><code>status: open</code> <strong>${esc(HERO.seeking)}</strong><br>${esc(HERO.seekingLabel)}</p>
       <p class="hero-actions">
-        <a class="btn btn-primary" href="#experience">See my experience <span aria-hidden="true">↓</span></a>
+        <a class="btn btn-primary" href="#work">See my work</a>
         <a class="btn" href="/resume/">Résumé</a>
-        <a class="btn" href="mailto:${CONTACT_EMAIL}">Email me</a>
       </p>
     </div>
+    <a class="scroll-cue" href="#do"><span class="visually-hidden">Scroll to what I do</span><span class="mouse" aria-hidden="true"></span></a>
   </section>
 
-  <section id="experience" class="section" aria-labelledby="exp-h">
+  <section id="do" class="section" aria-labelledby="do-h">
     <div class="wrap">
-      ${sectionTitle('exp-h', 'My', 'Experience', '01')}
-      <ol class="timeline">
-        ${EXPERIENCE.map((e) => `
-        <li class="job">
-          <div class="job-head">
-            <p class="period">${esc(e.period)}</p>
-            <h3>${esc(e.role)}</h3>
-            <p class="org">${esc(e.org)} · ${esc(e.place)}</p>
-          </div>
-          <div class="job-body">
-            <ul class="job-points">${e.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>
-            ${e.tags ? tagList(e.tags, `${e.org} technologies`) : ''}
-          </div>
-        </li>`).join('\n')}
-      </ol>
-
-      <div class="creds">
-        <div>
-          <h3 class="sub-h"><span aria-hidden="true">// </span>Certifications</h3>
-          <ul class="education">
-            ${CERTIFICATIONS.map((c) => `<li><h4 class="ed-what">${esc(c.what)}</h4><p class="org">${esc(c.where)}</p>${c.period ? `<p class="period">${esc(c.period)}</p>` : ''}${c.note ? `<p class="note">${esc(c.note)}</p>` : ''}</li>`).join('\n            ')}
-          </ul>
-        </div>
-        <div>
-          <h3 class="sub-h"><span aria-hidden="true">// </span>Education</h3>
-          <ul class="education">
-            ${EDUCATION.map((e) => `<li><h4 class="ed-what">${esc(e.what)}</h4><p class="org">${esc(e.where)}</p><p class="period">${esc(e.period)}</p>${e.note ? `<p class="note">${esc(e.note)}</p>` : ''}</li>`).join('\n            ')}
-          </ul>
-        </div>
+      ${sectionHead('do-h', 'What I', 'Do', HERO.lede)}
+      <div class="do-grid">
+        ${DOING.map((d) => `
+        <article class="card do-card reveal">
+          <div class="do-icon">${ICONS[d.icon]}</div>
+          <h3>${esc(d.h)}</h3>
+          <p>${esc(d.p)}</p>
+          ${tags(d.tags, d.h)}
+        </article>`).join('')}
       </div>
-
-      <p class="cta">
-        <a class="btn btn-primary" href="/resume/">Full résumé</a>
-        ${hasPdf ? `<a class="btn" href="/resume.pdf" download="Jasman-Tan-Resume.pdf">Download PDF</a>` : ''}
-        <a class="btn" href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>
-      </p>
     </div>
   </section>
 
   <section id="work" class="section section-alt" aria-labelledby="work-h">
     <div class="wrap">
-      ${sectionTitle('work-h', 'Engineering', 'Projects', '02')}
-      <p class="section-lede">Side projects, all of them running rather than half-finished. Several are private because they hold personal data; those are described, not linked.</p>
-      <div class="projects">
-        ${engProjects.map(projectCard).join('\n')}
+      ${sectionHead('work-h', 'Selected', 'Projects', 'Side projects, all of them running rather than half-finished. The private ones hold personal data, so they are described, not linked.')}
+
+      <article class="card featured reveal" id="project-${featured.id}">
+        <div class="featured-media">${cardOptimizerMock}<p class="mock-note">Illustration — the real app holds private data.</p></div>
+        <div class="featured-body">
+          <p class="kicker">// featured</p>
+          <h3>${esc(featured.name)}</h3>
+          <p class="tagline">${esc(featured.tagline)}</p>
+          <p class="featured-built">${esc(featured.problem)}</p>
+          ${tags(featured.stack, `${featured.name} stack`)}
+          <p class="card-foot"><span class="badge">Private · self-hosted</span></p>
+          ${details(featured)}
+        </div>
+      </article>
+
+      <div class="pgrid">
+        ${engProjects.map(smallCard).join('')}
+        <article class="card pcard reveal" id="infra">
+          <div class="card-media">${art(59, 200)}</div>
+          <div class="card-body">
+            <h3>${esc(INFRA.title)}</h3>
+            <p class="tagline">${esc(INFRA.lede)}</p>
+            ${tags(['Cloudflare Tunnel', 'Zero Trust Access', 'Windows', 'PowerShell'], 'Home server stack')}
+            <details class="more">
+              <summary>How it works</summary>
+              <div class="more-body">${INFRA.points.map((pt) => `<p><strong>${esc(pt.h)}.</strong> ${esc(pt.p)}</p>`).join('')}</div>
+            </details>
+          </div>
+        </article>
       </div>
 
-      <div id="infra" class="infra" aria-labelledby="infra-h">
-        <h3 id="infra-h" class="infra-title">${esc(INFRA.title)}</h3>
-        <p class="section-lede">${esc(INFRA.lede)}</p>
-        <ul class="infra-grid">
-          ${INFRA.points.map((pt) => `<li><h4 class="infra-h">${esc(pt.h)}</h4><p>${esc(pt.p)}</p></li>`).join('\n          ')}
-        </ul>
+      <h3 class="also-h reveal"><span aria-hidden="true">// </span>Also built — games</h3>
+      <div class="pgrid pgrid-2">
+        ${games.map(smallCard).join('')}
       </div>
     </div>
   </section>
 
-  <section id="skills" class="section" aria-labelledby="skills-h">
+  <section id="experience" class="section" aria-labelledby="exp-h">
     <div class="wrap">
-      ${sectionTitle('skills-h', 'My', 'Stack', '03')}
-      <p class="section-lede">Things I have shipped with, not things I have read about.</p>
-      <div class="skills">
-        ${SKILLS.map((g) => `<div class="skill-group"><h3>${esc(g.h)}</h3><ul>${g.items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul></div>`).join('\n        ')}
-      </div>
-    </div>
-  </section>
+      ${sectionHead('exp-h', 'My', 'Experience')}
+      <ol class="tl">
+        ${EXPERIENCE.map((e) => `
+        <li class="tl-item reveal">
+          <p class="period">${esc(e.period)}</p>
+          <h3>${esc(e.role)}</h3>
+          <p class="org">${esc(e.org)} · ${esc(e.place)}</p>
+          <p class="tl-sum">${esc(e.summary)}</p>
+          ${tags(e.tags, `${e.org} technologies`)}
+        </li>`).join('')}
+      </ol>
 
-  <section id="also" class="section section-alt" aria-labelledby="also-h">
-    <div class="wrap">
-      ${sectionTitle('also-h', 'Also', 'Built', '04')}
-      <p class="section-lede">Games I have built or rebuilt, outside the day job.</p>
-      <div class="projects">
-        ${games.map(projectCard).join('\n')}
+      <div class="creds reveal">
+        <div>
+          <h3 class="sub-h">// certifications</h3>
+          <ul class="education">
+            ${CERTIFICATIONS.map((c) => `<li><strong>${esc(c.what)}</strong><span class="muted"> · ${esc(c.where)}${c.period ? ` · ${esc(c.period)}` : ''}</span></li>`).join('')}
+          </ul>
+        </div>
+        <div>
+          <h3 class="sub-h">// education</h3>
+          <ul class="education">
+            ${EDUCATION.map((e) => `<li><strong>${esc(e.what)}</strong><span class="muted"> · ${esc(e.where)} · ${esc(e.period)}</span></li>`).join('')}
+          </ul>
+        </div>
       </div>
+
+      <p class="cta reveal">
+        <a class="btn btn-primary" href="/resume/">Full résumé</a>
+        ${hasPdf ? `<a class="btn" href="/resume.pdf" download="Jasman-Tan-Resume.pdf">Download PDF</a>` : ''}
+        <a class="btn" href="mailto:${CONTACT_EMAIL}">Email me</a>
+      </p>
     </div>
   </section>
 </main>
