@@ -158,32 +158,6 @@
   </footer>
 </article>
 
-<article class="project" id="project-jobgrab">
-  <header class="project-head">
-    <h3>Jobgrab</h3>
-    <p class="tagline">A job aggregator and matcher for the Singapore software market.</p>
-    <p class="badges"><span class="badge badge-private">Private — self-hosted</span></p>
-    
-  </header>
-  
-  <div class="project-body">
-    <div class="pb"><h4>The problem</h4><p>Job boards optimise for volume. Looking for a specific kind of role means re-reading the same postings across four sites every day.</p></div>
-    <div class="pb"><h4>What I built</h4><p>A Python tool — standard library only, no dependencies — that pulls postings from four sources (the MyCareersFuture API, LinkedIn, Careers@Gov and employer feeds), deduplicates them, and scores each one against a structured profile with an explicit weighted formula over scope, salary, location and employer type. Salary resolves in a defined order: an officially posted range first, then a researched multi-source company band, then an assumption by employer type — and an estimate is never allowed to exclude a job on its own. Results are served as one interactive page from a local HTTP server, with application tracking and LLM-drafted cover letters.</p></div>
-    <div class="pb"><h4>Where it stands</h4><p>Around 7,700 postings ingested and scored. Private by necessity — the generated page embeds a full resume and personal application notes.</p></div>
-    
-    
-  </div>
-  <footer class="project-foot">
-    <ul class="stack" aria-label="Jobgrab stack">
-      <li>Python (stdlib only)</li>
-      <li>HTTP scraping / APIs</li>
-      <li>Scoring model</li>
-      <li>LLM CLI</li>
-    </ul>
-    
-  </footer>
-</article>
-
 <article class="project" id="project-the-signal">
   <header class="project-head">
     <h3>The Signal</h3>
