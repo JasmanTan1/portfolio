@@ -19,6 +19,7 @@ export const SITE = {
 };
 
 export const HERO = {
+  headline: 'Software Engineer — backend, integrations & systems that stay up.',
   lede:
     'I build the unglamorous systems other people depend on: integration layers, databases that have to stay correct across time zones, and dashboards that factory operators use every shift.',
   body:
@@ -32,6 +33,7 @@ export const HERO = {
 export const PROJECTS = [
   {
     id: 'kubrix',
+    group: 'games', // listed under "Also built", below the engineering work
     name: 'Kubrix',
     tagline: 'A browser remake of a Game-of-the-Year student title — playable in one click.',
     featured: true,
@@ -73,6 +75,7 @@ export const PROJECTS = [
   },
   {
     id: 'camp-nightfall',
+    group: 'games',
     name: 'Camp Nightfall',
     tagline: 'A phone-and-TV social deduction game refereed by an AI host instead of a person.',
     // /host is host-only and is going behind Cloudflare Access — never link it.
@@ -196,6 +199,7 @@ export const EXPERIENCE = [
     org: 'Interplex Precision Technology',
     place: 'Singapore',
     period: 'Dec 2021 – present',
+    tags: ['T-SQL', 'SQL Server', 'SAP ERP integration', 'HTML / JavaScript', 'Python', 'PowerShell', 'HYDRA MES'],
     points: [
       'End-to-end delivery across a six-database SQL Server estate serving five plants in Singapore, Batam, the Czech Republic, China and India — requirements, T-SQL and workflow-engine implementation, dashboard front end, deployment and post-deploy verification.',
       'Built and maintain the SAP ERP ↔ MES integration layer: goods issue and receipt, handling units, time-ticket outbound and the production-order inbound lifecycle, running across four countries.',
@@ -210,6 +214,7 @@ export const EXPERIENCE = [
     org: 'NCS Pte Ltd',
     place: 'Singapore',
     period: 'Apr 2020 – Nov 2021',
+    tags: ['C#', 'SQL', 'HTML', 'JavaScript'],
     points: [
       'Full-stack development, enhancement and maintenance of client applications in C#, HTML, JavaScript and SQL at a government-linked IT services firm.',
       'Impact analysis, defect fixing, and technical design and functional specification documents.',
@@ -220,6 +225,7 @@ export const EXPERIENCE = [
     org: 'Affinixy Pte Ltd',
     place: 'Singapore',
     period: 'Apr 2019 – Dec 2019',
+    tags: ['Unity3D', 'Android', 'iOS'],
     points: ['Shipped a mobile game to Android and iOS: core systems, AI, NavMesh pathfinding, gameplay and UI/UX direction.'],
   },
 ];
