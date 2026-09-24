@@ -20,6 +20,27 @@ const hasPdf = existsSync(join(root, 'static', 'resume.pdf'));
 
 /* ---------------------------------------------------------------- helpers */
 
+// schema.org Person, built only from data.mjs — for HR portals and crawlers.
+const current = EXPERIENCE[0];
+const personLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.name,
+  jobTitle: SITE.role,
+  url: SITE.origin + '/',
+  email: 'mailto:' + CONTACT_EMAIL,
+  address: { '@type': 'PostalAddress', addressLocality: SITE.location, addressCountry: 'SG' },
+  worksFor: { '@type': 'Organization', name: current.org },
+  alumniOf: EDUCATION.map((e) => ({ '@type': 'EducationalOrganization', name: e.where.split(',')[0] })),
+  hasCredential: CERTIFICATIONS.map((c) => ({
+    '@type': 'EducationalOccupationalCredential',
+    name: c.what,
+    recognizedBy: { '@type': 'Organization', name: c.where },
+  })),
+  knowsAbout: [...new Set(SKILLS.flatMap((g) => g.items))],
+  sameAs: SITE.links.map((l) => l.href),
+}).replace(/</g, '\\u003c');
+
 const head = ({ title, description, path = '/' }) => `<!doctype html>
 <html lang="en">
 <head>
@@ -45,6 +66,9 @@ const head = ({ title, description, path = '/' }) => `<!doctype html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="/styles.css">
+<link rel="alternate" type="text/markdown" href="/resume.md" title="Résumé (Markdown)">
+${path === '/' || path === '/resume/' ? `<link rel="alternate" type="application/pdf" href="/resume.pdf" title="Résumé (PDF)">
+<script type="application/ld+json">${personLd}</script>` : ''}
 <script>/* applied before first paint so a chosen theme never flashes */try{var t=localStorage.getItem('jt-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>`;
 
@@ -175,6 +199,7 @@ const indexHtml = `${head({
     <nav aria-label="Sections">
       <a href="#do"><span class="nav-slash" aria-hidden="true">//</span> what i do</a>
       <a href="#work"><span class="nav-slash" aria-hidden="true">//</span> projects</a>
+      <a href="#stack"><span class="nav-slash" aria-hidden="true">//</span> stack</a>
       <a href="#experience"><span class="nav-slash" aria-hidden="true">//</span> experience</a>
       <a class="nav-keep" href="/resume/"><span class="nav-slash" aria-hidden="true">//</span> résumé</a>
     </nav>
@@ -249,6 +274,15 @@ const indexHtml = `${head({
       <div class="pgrid pgrid-2">
         ${games.map(smallCard).join('')}
       </div>
+    </div>
+  </section>
+
+  <section id="stack" class="stack-strip" aria-labelledby="stack-h">
+    <div class="wrap">
+      <h2 id="stack-h" class="stack-h reveal">// stack</h2>
+      <dl class="stack-groups reveal">
+        ${SKILLS.map((g) => `<div class="sg"><dt>${esc(g.h)}</dt><dd><ul class="stack">${g.items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul></dd></div>`).join('\n        ')}
+      </dl>
     </div>
   </section>
 
