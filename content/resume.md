@@ -6,7 +6,7 @@ jasmantan@hotmail.com · linkedin.com/in/jasmantan · github.com/JasmanTan1 · S
 
 ## Skills
 - **Languages**: C#, T-SQL/SQL, JavaScript, TypeScript, Python, PowerShell, C/C++, Java, Dart (Flutter), GDScript
-- **Back end & data**: .NET, SQL Server (multi-database, stored procedures, performance fixes), PostgreSQL/Supabase (auth, row-level sync), REST APIs, ERP↔application integration (SAP), ETL-style reporting, timezone-correct multi-site data handling
+- **Back end & data**: .NET, SQL Server (multi-database, stored procedures, performance fixes), PostgreSQL/Supabase (auth, row-level sync), REST APIs, SAP ERP-to-application integration, ETL-style reporting, timezone-correct multi-site data handling
 - **Front end**: HTML/CSS/JavaScript dashboards, Flutter mobile (Android/iOS), responsive multi-language UIs (6 locales)
 - **Engineering practice**: Git/GitHub, GitHub Actions (CI/CD and Pages deploys), Playwright end-to-end tests, change-request to production deployment and post-deploy verification, L1/L2/L3 production support, technical and functional documentation
 - **AI tooling**: LLM-assisted development workflows (Claude Code, structured prompts, agentic scripts), API integration with LLM back ends
@@ -15,7 +15,7 @@ jasmantan@hotmail.com · linkedin.com/in/jasmantan · github.com/JasmanTan1 · S
 
 ### Software Engineer, Manufacturing Systems (MES) — Interplex Precision Technology, Singapore · Dec 2021 – present
 - Own end-to-end delivery of production features across a 6-database SQL Server estate serving 5 plants (Singapore, Batam, Czech Republic, China, India): requirements, T-SQL and workflow-engine implementation, dashboard front end, deployment and post-deploy verification.
-- Built and maintain the SAP ERP ↔ MES integration layer: goods issue/receipt, handling units, time-ticket outbound and the production-order inbound lifecycle, running across four countries.
+- Built and maintain the SAP ERP to MES integration layer: goods issue/receipt, handling units, time-ticket outbound and the production-order inbound lifecycle, running across four countries.
 - Root-caused and fixed a production routing defect that sent operator scans to the wrong work order, replacing iframe-focus heuristics with active-step resolution.
 - Built production reporting dashboards in HTML/JavaScript over SQL Server: serial-number genealogy and traceability, per-operator labour, time-ticket and machine-timeline views, with plant-local time handling.
 - Designed a centralised 6-language (EN/ID/CZ/ES/TA/ZH) translation system spanning dashboards and workflows, with Python tooling to sync translation sources.
