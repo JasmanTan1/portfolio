@@ -93,6 +93,7 @@ export const PROJECTS = [
     name: 'jhub',
     tagline: 'A private family media app: our own video and music library in one place, on phone, desktop and TV, offline included.',
     private: true,
+    caseStudy: '/jhub/',
     problem:
       'Family videos and music end up scattered across phones, old drives and apps that each work differently. I wanted one private place for our library that keeps working on a plane, and that family members who are not technical can use without asking me.',
     built:

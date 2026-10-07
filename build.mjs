@@ -11,6 +11,7 @@ import { renderMarkdown, esc } from './src/markdown.mjs';
 import {
   CONTACT_EMAIL, SITE, HERO, PROJECTS, INFRA, SKILLS, EXPERIENCE, CERTIFICATIONS, EDUCATION, DOING, WORKFLOW,
 } from './src/data.mjs';
+import { CASE_STUDY, caseStudyMain } from './src/jhub-case-study.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dist = join(root, 'dist');
@@ -176,6 +177,7 @@ function smallCard(p) {
   const action = p.link && !p.link.pending
     ? `<a class="card-link" href="${p.link.href}" rel="noopener">${esc(p.link.label)} <span aria-hidden="true">↗</span></a>`
     : p.private ? '<span class="badge">Private · self-hosted</span>' : '';
+  const study = p.caseStudy ? `<a class="card-link" href="${p.caseStudy}">Read the case study <span aria-hidden="true">→</span></a>` : '';
   return `
     <article class="card pcard reveal" id="project-${p.id}">
       <div class="card-media">${media}</div>
@@ -184,7 +186,7 @@ function smallCard(p) {
         <p class="tagline">${esc(p.tagline)}</p>
         ${p.awards ? `<p class="award-line"><span aria-hidden="true">★</span> ${esc(p.awards.main)} · ${esc(p.awards.heading)}</p>` : ''}
         ${tags(p.stack, `${p.name} stack`)}
-        <div class="card-foot">${action}</div>
+        <div class="card-foot">${study}${study && action ? ' ' : ''}${action}</div>
         ${details(p)}
       </div>
     </article>`;
@@ -389,6 +391,28 @@ ${footer()}`;
 mkdirSync(join(dist, 'resume'), { recursive: true });
 writeFileSync(join(dist, 'resume', 'index.html'), resumeHtml);
 writeFileSync(join(dist, 'resume.md'), resumeSynced);
+
+/* ------------------------------------------------------------ case study */
+
+const caseHtml = `${head({
+  title: `${CASE_STUDY.title} — ${SITE.name}`,
+  description: CASE_STUDY.description,
+  path: '/jhub/',
+})}
+<body class="case-page">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    ${wordmark}
+    <nav aria-label="Sections"><a href="/#work">Back to portfolio</a></nav>
+    ${themeToggle}
+  </div>
+</header>
+${caseStudyMain()}
+${footer()}`;
+
+mkdirSync(join(dist, 'jhub'), { recursive: true });
+writeFileSync(join(dist, 'jhub', 'index.html'), caseHtml);
 
 /* ------------------------------------------------------- static + plumbing */
 
