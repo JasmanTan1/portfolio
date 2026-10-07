@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jhub — case study — Jasman Tan</title>
+<meta name="description" content="A private family media app, built end to end: TypeScript monorepo, Fastify and SQLite, a React PWA with offline downloads, and a serverless relay on the free tier.">
+<meta name="author" content="Jasman Tan">
+<link rel="canonical" href="https://jasmantan.com/jhub/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jasman Tan">
+<meta property="og:title" content="jhub — case study — Jasman Tan">
+<meta property="og:description" content="A private family media app, built end to end: TypeScript monorepo, Fastify and SQLite, a React PWA with offline downloads, and a serverless relay on the free tier.">
+<meta property="og:url" content="https://jasmantan.com/jhub/">
+<meta property="og:image" content="https://jasmantan.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Jasman Tan — Software Engineer, Singapore">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0B0D10">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/styles.css?v=ae96746b">
+<link rel="alternate" type="text/markdown" href="/resume.md" title="Résumé (Markdown)">
+
+<script>/* applied before first paint so a chosen theme never flashes */try{var t=localStorage.getItem('jt-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body class="case-page">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="wordmark" href="/" aria-label="Jasman Tan — home">JasmanTan<span class="accent">._</span></a>
+    <nav aria-label="Sections"><a href="/#work">Back to portfolio</a></nav>
+    
+<button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+  <span class="visually-hidden">Switch between light and dark theme</span>
+  <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><g class="rays"><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></g></svg>
+  <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4a8.3 8.3 0 1 0 10.5 10.5z"/></svg>
+</button>
+  </div>
+</header>
+
+<main id="main" class="cs">
+  <header class="cs-hero">
+    <div class="cs-wrap">
+      <p class="kicker">// case study</p>
+      <h1>jhub</h1>
+      <p class="cs-lede">One self-hosted app for our own video and music library, on every phone, laptop and TV in the family, offline included. This page is how it is built, what went wrong on the way, and how I worked with AI agents to build it.</p>
+      <ul class="cs-facts" aria-label="jhub in numbers">
+        <li><strong>85</strong><span>forward-only database migrations</span></li>
+        <li><strong>2,200+</strong><span>server unit tests</span></li>
+        <li><strong>80+</strong><span>written decision records</span></li>
+        <li><strong>300+</strong><span>commits, in a few weeks</span></li>
+      </ul>
+      <ul class="stack" aria-label="Headline stack"><li>TypeScript</li><li>Fastify</li><li>SQLite</li><li>React 19</li><li>Cloudflare Workers</li><li>Playwright</li></ul>
+    </div>
+  </header>
+
+  <section class="cs-sec" aria-labelledby="cs-why">
+    <div class="cs-wrap">
+      <h2 id="cs-why"><span class="cs-n">01</span> What it is, and why</h2>
+      <p>Family videos and music end up scattered across phones, old drives and several apps that each work differently. I wanted one private place for our own library that replaces those apps, keeps working on a plane, and that family members who are not technical can use without asking me.</p>
+      <p>The constraints shaped everything: one mini PC at home, family members on iPhone and Android, reachable only over a private network, and a budget close to zero. That ruled out anything that needs a cloud bill or a public endpoint.</p>
+    </div>
+  </section>
+
+  <section class="cs-sec cs-alt" aria-labelledby="cs-arch">
+    <div class="cs-wrap">
+      <h2 id="cs-arch"><span class="cs-n">02</span> Architecture</h2>
+      <div class="cs-arch-grid">
+        <figure class="cs-fig">
+          <svg class="cs-diagram" viewBox="0 0 360 500" role="img" aria-labelledby="cs-dia-t cs-dia-d">
+  <title id="cs-dia-t">jhub components and data flow</title>
+  <desc id="cs-dia-d">Phones and laptops running the web app talk to a Fastify API on a home server. The API and a worker process share a SQLite database, and reach the video and music servers through an integration layer. A Cloudflare Worker relay holds signed notification decisions until the worker pulls them.</desc>
+  <defs>
+    <marker id="cs-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="cs-head"/></marker>
+  </defs>
+  <rect x="8" y="152" width="344" height="340" rx="14" class="cs-zone"/>
+  <text x="20" y="171" class="cs-zone-t">HOME SERVER · PRIVATE NETWORK ONLY</text>
+
+  <rect x="20" y="8" width="320" height="50" rx="10" class="cs-box"/>
+  <text x="180" y="30" text-anchor="middle" class="cs-t">Phones, laptops, TV</text>
+  <text x="180" y="47" text-anchor="middle" class="cs-s">React 19 PWA · offline downloads</text>
+
+  <rect x="190" y="84" width="150" height="46" rx="10" class="cs-box cs-out"/>
+  <text x="265" y="104" text-anchor="middle" class="cs-t">Cloudflare relay</text>
+  <text x="265" y="120" text-anchor="middle" class="cs-s">Worker + KV · free tier</text>
+
+  <path d="M95 58V186" class="cs-arrow" marker-end="url(#cs-arrow)"/>
+  <text x="103" y="100" class="cs-s">over the</text><text x="103" y="114" class="cs-s">private network</text>
+  <path d="M300 58V84" class="cs-arrow" marker-end="url(#cs-arrow)"/>
+  <text x="250" y="76" text-anchor="end" class="cs-s">signed choice</text>
+  <path d="M265 190V130" class="cs-arrow cs-dash" marker-end="url(#cs-arrow)"/>
+  <text x="258" y="152" text-anchor="end" class="cs-s">pulled</text>
+
+  <rect x="20" y="186" width="150" height="56" rx="10" class="cs-box"/>
+  <text x="95" y="210" text-anchor="middle" class="cs-t">Fastify API</text>
+  <text x="95" y="227" text-anchor="middle" class="cs-s">auth · routes</text>
+  <rect x="190" y="186" width="150" height="56" rx="10" class="cs-box"/>
+  <text x="265" y="210" text-anchor="middle" class="cs-t">Worker</text>
+  <text x="265" y="227" text-anchor="middle" class="cs-s">queue · pacing · retries</text>
+
+  <path d="M95 242V274" class="cs-arrow" marker-end="url(#cs-arrow)"/><path d="M265 242V274" class="cs-arrow" marker-end="url(#cs-arrow)"/>
+  <rect x="20" y="274" width="320" height="44" rx="10" class="cs-box cs-key"/>
+  <text x="180" y="294" text-anchor="middle" class="cs-t">SQLite</text>
+  <text x="180" y="310" text-anchor="middle" class="cs-s">85 migrations · shared by API and worker</text>
+
+  <path d="M180 318V350" class="cs-arrow" marker-end="url(#cs-arrow)"/>
+  <rect x="20" y="350" width="320" height="44" rx="10" class="cs-box"/>
+  <text x="180" y="370" text-anchor="middle" class="cs-t">Integration layer</text>
+  <text x="180" y="386" text-anchor="middle" class="cs-s">adapters hide each server’s quirks</text>
+
+  <path d="M95 394V420" class="cs-arrow" marker-end="url(#cs-arrow)"/><path d="M265 394V420" class="cs-arrow" marker-end="url(#cs-arrow)"/>
+  <rect x="20" y="420" width="150" height="56" rx="10" class="cs-box"/>
+  <text x="95" y="444" text-anchor="middle" class="cs-t">Video server</text>
+  <text x="95" y="461" text-anchor="middle" class="cs-s">Jellyfin</text>
+  <rect x="190" y="420" width="150" height="56" rx="10" class="cs-box"/>
+  <text x="265" y="444" text-anchor="middle" class="cs-t">Music server</text>
+  <text x="265" y="461" text-anchor="middle" class="cs-s">Navidrome</text>
+</svg>
+          <figcaption class="small muted">Components and data flow. The only thing outside the home network is the relay, and it is pulled from, never pushed to.</figcaption>
+        </figure>
+        <dl class="cs-defs">
+          <div><dt>TypeScript monorepo</dt><dd>One repository with a server package and a web package that share types. Fastify 5 serves the API; SQLite holds the data, with 85 forward-only migrations that run at start.</dd></div>
+          <div><dt>A separate worker process</dt><dd>Long jobs (library scans, file moves, background analysis) run in their own process with a queue, pacing, retries and a hard rule that background work never competes with something a person is waiting for. Background analysis runs under nice 19.</dd></div>
+          <div><dt>Installable web app</dt><dd>React 19 as a PWA. A service worker caches the shell, and videos and songs can be saved to the phone through a paced download queue (Background Fetch where the browser has it) that resumes after a dropped connection.</dd></div>
+          <div><dt>An integration layer</dt><dd>The app talks to open-source media servers (Jellyfin for video, Navidrome for music) through one layer of adapters, so the rest of the code never sees their API quirks and a server can be replaced without touching the UI.</dd></div>
+          <div><dt>A serverless relay</dt><dd>Phone notifications carry action buttons. Away from home the home server cannot be reached, so the choice goes to a small Cloudflare Worker with KV storage, signed with HMAC and expiring after 14 days. The home server pulls decisions from it; it never accepts a connection from the internet.</dd></div>
+          <div><dt>Hardened services</dt><dd>Each process is a systemd unit running as an unprivileged user, with a read-only view of the system and only the folders it needs writable.</dd></div>
+        </dl>
+      </div>
+      <h3 class="cs-h3">Designing to the free tier: the KV budget</h3>
+      
+          <dl class="cs-trio">
+            <div><dt>Problem</dt><dd>The relay is designed for the free tier, and a free tier is a budget. The first version listed the KV keys on every poll, once a minute: 1,440 list operations a day, which blew the daily cap.</dd></div>
+            <div><dt>What I did</dt><dd>A decision now also sets a single &quot;pending&quot; flag. A poll reads that one key (a cheap read) and only lists when it is set, plus one safety sweep every 30 minutes in case an eventually consistent delete loses a flag.</dd></div>
+            <div><dt>Result</dt><dd>List operations dropped by roughly 95 percent, and the relay is far below every free-tier limit. The lesson I kept: when a cloud service has a quota, design for the quota on day one.</dd></div>
+          </dl>
+    </div>
+  </section>
+
+  <section class="cs-sec" aria-labelledby="cs-prob">
+    <div class="cs-wrap">
+      <h2 id="cs-prob"><span class="cs-n">03</span> Interesting problems</h2>
+      
+      <article class="cs-prob">
+        <h3 class="cs-h3">Offline downloads on flaky mobile networks</h3>
+          <dl class="cs-trio">
+            <div><dt>Problem</dt><dd>A phone on a train drops its connection mid-file, the browser kills background tabs, and storage numbers differ between browsers. A naive download button fails silently and leaves half-files.</dd></div>
+            <div><dt>What I did</dt><dd>Downloads go through a paced queue that resumes by byte offset, uses Background Fetch where available, and only treats a real quota error as &quot;out of space&quot;, because some browsers report a capped placeholder figure. The player prefers the local copy when a complete one exists.</dd></div>
+            <div><dt>Result</dt><dd>A film saved at home plays on a plane. Interrupted downloads continue instead of restarting, and the space warning no longer cries wolf.</dd></div>
+          </dl>
+      </article>
+      <article class="cs-prob">
+        <h3 class="cs-h3">Matching songs across scripts</h3>
+          <dl class="cs-trio">
+            <div><dt>Problem</dt><dd>The same song can be titled in kanji in one place and in romaji in another, so matching on title text alone fails exactly where the library is most interesting.</dd></div>
+            <div><dt>What I did</dt><dd>The matcher treats track length as a first-class signal (within 2 seconds, 3 over six minutes), compares artists across kana and romaji, case and simplified or traditional Chinese, and uses standard recording identifiers when they are available. Anything uncertain goes to a review panel where a person hears a 15-second preview and decides.</dd></div>
+            <div><dt>Result</dt><dd>Songs whose titles are in another script now match automatically when length and artist agree. The uncertain ones are a short review list instead of a wrong guess.</dd></div>
+          </dl>
+      </article>
+      <article class="cs-prob">
+        <h3 class="cs-h3">Analysis that never competes with foreground work</h3>
+          <dl class="cs-trio">
+            <div><dt>Problem</dt><dd>Detecting a song’s tempo, feel and language (to build smart playlists) is CPU-heavy, and the server is a small desktop that is also streaming video.</dd></div>
+            <div><dt>What I did</dt><dd>Analysis lives in the worker on its own timer, handles one song per turn under nice 19 with a timeout, and waits while any job is queued, due or running. A missing analyser only leaves the fields empty and retries; it never marks a song as failed. A person’s manual correction always wins over the machine’s guess.</dd></div>
+            <div><dt>Result</dt><dd>The whole library is analysed over time with no visible effect on playback, and smart playlists (by tempo, feel, language) fill themselves.</dd></div>
+          </dl>
+      </article>
+      <article class="cs-prob">
+        <h3 class="cs-h3">Deduplicating by stable identifiers</h3>
+          <dl class="cs-trio">
+            <div><dt>Problem</dt><dd>Several family members keep the same file, and the same song or film can arrive twice under slightly different names.</dd></div>
+            <div><dt>What I did</dt><dd>Identity is decided by stable identifiers (ids, recording identifiers, and length as a tie-breaker), never by display names alone. A shared file is stored once, counted once, and its size is split between the people who keep it for their storage quota.</dd></div>
+            <div><dt>Result</dt><dd>No duplicate copies on disk, and each person’s quota reflects what they really use.</dd></div>
+          </dl>
+      </article>
+      <h3 class="cs-h3">Two smaller ones worth telling</h3>
+      <ul class="cs-list">
+        <li><strong>A timezone bug hiding in the tests.</strong> The server clock is UTC and the family lives in Singapore, so quiet hours and the daily digest were evaluated eight hours off. Tests passed because they ran in the wrong zone too. Fix: one shared time helper with an explicit household zone, and tests written with real local instants, including an evening that is still &quot;yesterday&quot; in UTC.</li>
+        <li><strong>A deploy that left new pages on an old server.</strong> The deploy script built the web app first; when the server step then failed, new pages were live against old API code. Fix: install and type-check the server before building the web app, so a failed deploy changes nothing.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="cs-sec cs-alt" aria-labelledby="cs-qual">
+    <div class="cs-wrap">
+      <h2 id="cs-qual"><span class="cs-n">04</span> Quality</h2>
+      <p>Unit tests cover the logic (2,200+ on the server, 300+ on the web side). End-to-end tests drive a real browser with Playwright, and layout checks run at phone width (390 px) and desktop width (1440 px) so a page that overflows on a phone fails the suite.</p>
+      <p>Every non-trivial change is behind a written decision record (80+ so far): the choice, the trade-offs, what was not done and how to roll it back. Each deploy follows a checklist, and I verify the end state afterwards, not just that a command exited cleanly.</p>
+    </div>
+  </section>
+
+  <section class="cs-sec" aria-labelledby="cs-built">
+    <div class="cs-wrap">
+      <h2 id="cs-built"><span class="cs-n">05</span> How I built it</h2>
+      <p>Most of the code was written by AI coding agents. My part was the part that decides whether it is right: the written brief, the boundaries, the review and the merge.</p>
+      <p>Each feature starts as a brief with numbered items, a list of what the agent must not touch, and how the result will be checked. Agents work in isolated git worktrees so parallel jobs cannot collide, with reserved migration and decision numbers. They report with test output and screenshots; I read the diff, look at the screens at phone and desktop size, run the full test gate, and only then merge.</p>
+      <p>I designed the system, reviewed the work and made the decisions; the agents wrote a lot of the code. Two things it taught me: a good spec beats a clever prompt, and a green exit code is not evidence, so check the end state yourself.</p>
+    </div>
+  </section>
+
+  <section class="cs-sec cs-alt" aria-labelledby="cs-stack">
+    <div class="cs-wrap">
+      <h2 id="cs-stack"><span class="cs-n">06</span> Stack, and what I would do next</h2>
+      <ul class="stack" aria-label="jhub stack"><li>TypeScript</li><li>Node.js</li><li>Fastify</li><li>SQLite</li><li>React 19</li><li>Vite</li><li>PWA</li><li>Service Worker</li><li>Background Fetch</li><li>Web Push</li><li>Cloudflare Workers</li><li>Cloudflare KV</li><li>Vitest</li><li>Playwright</li><li>systemd</li><li>Docker Compose</li><li>Linux</li></ul>
+      <h3 class="cs-h3">Next</h3>
+      <ul class="cs-list">
+        <li>An off-site backup. Two disks in one box do not survive a fire or a theft.</li>
+        <li>Replace polling with push where it is cheap, and add metrics (queue depth, job latency) to the health page so a slow week is visible before it is a problem.</li>
+        <li>Per-device tips and settings that sync between a person’s devices, which needs a small server table.</li>
+      </ul>
+      <p class="cs-cta">
+        <a class="btn btn-primary" href="/#project-jhub">Back to the project</a>
+        <a class="btn" href="/resume/">Résumé</a>
+      </p>
+      <p class="small muted">jhub is a private family app, so there is no public demo or repository. Happy to talk through the architecture and the trade-offs on a call.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p class="footer-contact">
+      <a href="mailto:jasmantan@hotmail.com">jasmantan@hotmail.com</a>
+      <a href="https://github.com/JasmanTan1" rel="me noopener">GitHub</a>
+      <a href="https://linkedin.com/in/jasmantan" rel="me noopener">LinkedIn</a>
+      
+    </p>
+    <p class="muted small">Jasman Tan · Singapore · Built as a static site; the source is on GitHub.</p>
+  </div>
+</footer>
+<script src="/main.js?v=46f493dd" defer></script>
+</body>
+</html>
