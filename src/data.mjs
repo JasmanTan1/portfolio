@@ -11,7 +11,7 @@ export const SITE = {
   origin: 'https://jasmantan.com',
   location: 'Singapore',
   description:
-    'Software engineer in Singapore with 6+ years on business-critical systems: C#/.NET and T-SQL back ends, REST and SAP ERP integrations, and operator dashboards running across five manufacturing sites. On my own time I ship full-stack apps by directing AI coding agents, with tests as the gate. Looking for a backend, full-stack or AI-workflow role.',
+    'Software engineer in Singapore with 6+ years on business-critical systems: C#/.NET and T-SQL back ends, REST and SAP ERP integrations, and operator dashboards running across six manufacturing plants. On my own time I ship full-stack apps by directing AI coding agents, with tests as the gate. Looking for a backend, full-stack or AI-workflow role.',
   links: [
     { label: 'GitHub', href: 'https://github.com/JasmanTan1' },
     { label: 'LinkedIn', href: 'https://linkedin.com/in/jasmantan' },
@@ -23,7 +23,7 @@ export const HERO = {
   lede:
     'I build the unglamorous systems other people depend on: integration layers, databases that have to stay correct across time zones, and dashboards that factory operators use every shift.',
   body:
-    'Six years of that at an electronics manufacturer and a government-linked IT services firm — C#/.NET, T-SQL across a six-database SQL Server estate, and the SAP ERP integration that keeps five plants in four countries in sync. On my own time I ship smaller things end to end: a browser game, a party game with an AI referee, a credit-card optimiser, a family media hub, and the Linux server that hosts all of it. More and more of that is built by AI coding agents that I brief, review and gate with tests.',
+    'Six years of that at an electronics manufacturer and a government-linked IT services firm — C#/.NET, T-SQL across a six-database SQL Server estate, and the SAP ERP integration that keeps six plants in sync. On my own time I ship smaller things end to end: a browser game, a party game with an AI referee, a credit-card optimiser, a family media hub, and the Linux server that hosts all of it. More and more of that is built by AI coding agents that I brief, review and gate with tests.',
   seeking: 'Full-time · Hybrid or on-site · Singapore',
   seekingLabel: 'Open to backend, full-stack or AI-workflow engineering roles.',
 };
@@ -154,7 +154,7 @@ export const DOING = [
   {
     icon: 'link',
     h: 'Systems Integration',
-    p: 'I built and maintain the SAP ERP ⇄ MES integration layer that keeps five plants in four countries in sync.',
+    p: 'I built and maintain the SAP ERP ⇄ MES integration layer that keeps six plants in sync.',
     tags: ['SAP ERP', 'MES', 'REST'],
   },
   {
@@ -230,8 +230,12 @@ export const WORKFLOW = {
 
 export const SKILLS = [
   {
-    h: 'Languages',
-    items: ['C#', 'T-SQL / SQL', 'JavaScript', 'TypeScript', 'Python', 'Bash', 'PowerShell', 'C / C++', 'Java', 'Dart', 'GDScript'],
+    h: 'Languages (hands-on)',
+    items: ['C#', 'T-SQL / SQL', 'JavaScript', 'C / C++', 'PowerShell', 'Bash'],
+  },
+  {
+    h: 'Built by directing AI agents',
+    items: ['TypeScript', 'Python', 'Dart', 'GDScript'],
   },
   {
     h: 'Back end & data',
@@ -258,14 +262,14 @@ export const SKILLS = [
 export const EXPERIENCE = [
   {
     role: 'Software Engineer, Manufacturing Systems',
-    org: 'Interplex Precision Technology',
+    org: 'ENNOVI (formerly Interplex)',
     place: 'Singapore',
     period: 'Dec 2021 – present',
-    summary: 'End-to-end delivery across a six-database SQL Server estate serving five plants, plus the SAP ERP ↔ MES integration layer that runs across four countries.',
+    summary: 'End-to-end delivery across a six-database SQL Server estate serving six plants, plus the SAP ERP ↔ MES integration layer that runs across them.',
     tags: ['T-SQL', 'SQL Server', 'SAP ERP integration', 'HTML / JavaScript', 'Python', 'PowerShell', 'Flutter', 'HYDRA MES'],
     points: [
-      'End-to-end delivery across a six-database SQL Server estate serving five plants in Singapore, Batam, the Czech Republic, China and India — requirements, T-SQL and workflow-engine implementation, dashboard front end, deployment and post-deploy verification.',
-      'Built and maintain the SAP ERP ↔ MES integration layer: goods issue and receipt, handling units, time-ticket outbound and the production-order inbound lifecycle, running across four countries.',
+      'End-to-end delivery across a six-database SQL Server estate serving six plants in Singapore, Batam, the Czech Republic, China, India and the USA — requirements, T-SQL and workflow-engine implementation, dashboard front end, deployment and post-deploy verification.',
+      'Built and maintain the SAP ERP ↔ MES integration layer: goods issue and receipt, handling units, time-ticket outbound and the production-order inbound lifecycle, running across the plants.',
       'Root-caused and fixed a production routing defect that was sending operator scans to the wrong work order, replacing iframe-focus heuristics with active-step resolution.',
       'Built reporting dashboards over SQL Server — serial-number genealogy and traceability, per-operator labour, time-ticket and machine-timeline views — with plant-local time handling.',
       'Designed a centralised six-language (EN/ID/CZ/ES/TA/ZH) translation system spanning dashboards and workflows, with Python tooling to sync translation sources.',
