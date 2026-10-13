@@ -14,7 +14,7 @@ jasmantan@hotmail.com · linkedin.com/in/jasmantan · github.com/JasmanTan1 · S
 
 ## Experience
 
-### Software Engineer, Manufacturing Systems (MES) — Interplex Precision Technology, Singapore · Dec 2021 – present
+### Software Engineer, Manufacturing Systems (MES) — ENNOVI (formerly Interplex), Singapore · Dec 2021 – present
 - Own end-to-end delivery of production features across a 6-database SQL Server estate serving 5 plants (Singapore, Batam, Czech Republic, China, India): requirements, T-SQL and workflow-engine implementation, dashboard front end, deployment and post-deploy verification.
 - Built and maintain the SAP ERP to MES integration layer: goods issue/receipt, handling units, time-ticket outbound and the production-order inbound lifecycle, running across four countries.
 - Root-caused and fixed a production routing defect that sent operator scans to the wrong work order, replacing iframe-focus heuristics with active-step resolution.

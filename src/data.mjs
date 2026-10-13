@@ -258,7 +258,7 @@ export const SKILLS = [
 export const EXPERIENCE = [
   {
     role: 'Software Engineer, Manufacturing Systems',
-    org: 'Interplex Precision Technology',
+    org: 'ENNOVI (formerly Interplex)',
     place: 'Singapore',
     period: 'Dec 2021 – present',
     summary: 'End-to-end delivery across a six-database SQL Server estate serving five plants, plus the SAP ERP ↔ MES integration layer that runs across four countries.',
