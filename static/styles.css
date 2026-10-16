@@ -436,3 +436,6 @@ code { font-family: var(--mono); font-size: .88em; background: var(--bg-alt); pa
 .cs-sec .stack { margin: 0 0 1rem; }
 .cs-cta { margin: 2rem 0 1rem; display: flex; flex-wrap: wrap; gap: .8rem; }
 .case-page .footer { margin-top: 0; }
+
+.cs-role { max-width: 64ch; margin: 1rem 0 0; color: var(--text); font-size: .98rem; }
+.cs-lesson { margin: .6rem 0 0; font-style: italic; }

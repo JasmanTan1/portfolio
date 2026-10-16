@@ -99,7 +99,7 @@ export const PROJECTS = [
     built:
       "A TypeScript monorepo — a Fastify 5 API and a background worker, a React 19 installable web app, SQLite with 80+ forward-only migrations — in front of a Jellyfin video server and a Navidrome music server, all in Docker Compose. Each person has their own library, playlists and storage quota, and a file several people keep is counted once and split between them. Videos remember where each person stopped and show chapters; anything can be saved to the phone for offline use, with a service worker and resumable downloads. Notifications are web push, and their action buttons still work away from home through a Cloudflare Worker relay that holds HMAC-signed decisions until the server pulls them (sized to stay inside the free tier). An Ops page shows every moving part as green, amber or red with a one-line fix, and admins get a weekly summary.",
     outcome:
-      'In use by my family since October 2026, reachable only over Tailscale, never the public internet. Built in a few weeks of evenings with AI coding agents (see How I build): 280+ commits, a log of 75+ architecture decisions with rollback notes, and about 2,400 unit tests plus 330 Playwright browser tests at phone and desktop sizes that every deploy must pass.',
+      'In use by my family since October 2026, reachable only over Tailscale, never the public internet. Built in a few weeks of evenings with AI coding agents (see How I build): 500+ commits, a log of 100 architecture decisions with rollback notes, and about 3,700 unit tests plus Playwright browser tests at phone and desktop sizes that every deploy must pass.',
     stack: ['TypeScript', 'Fastify', 'React', 'SQLite', 'Docker Compose', 'Playwright', 'Cloudflare Workers', 'PWA · web push'],
   },
   {
@@ -218,7 +218,7 @@ export const WORKFLOW = {
     {
       icon: 'check',
       h: 'Gates, not trust',
-      p: 'Agent branches meet in an integration branch, and the whole suite runs there: type checks, about 2,400 unit tests and 330 browser tests at phone and desktop sizes. Master only fast-forwards to a green build, so rolling back is one command.',
+      p: 'Agent branches meet in an integration branch, and the whole suite runs there: type checks, about 3,700 unit tests and Playwright browser tests at phone and desktop sizes. Master only fast-forwards to a green build, so rolling back is one command.',
     },
     {
       icon: 'person',

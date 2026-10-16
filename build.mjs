@@ -432,6 +432,7 @@ writeFileSync(
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>${SITE.origin}/</loc><lastmod>${today}</lastmod></url>
   <url><loc>${SITE.origin}/resume/</loc><lastmod>${today}</lastmod></url>
+  <url><loc>${SITE.origin}/jhub/</loc><lastmod>${today}</lastmod></url>
 </urlset>
 `
 );
