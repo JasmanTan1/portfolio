@@ -177,6 +177,7 @@ export function caseStudyMain() {
       </ul>
       <p class="cs-cta">
         <a class="btn btn-primary" href="/#work">Back to all projects</a>
+        <a class="btn" href="/blog/">Read the build notes</a>
         <a class="btn" href="/resume/">Résumé</a>
       </p>
       <p class="small muted">jhub is a private family app, so there is no public demo or repository. Happy to walk through the architecture and the trade-offs on a call.</p>
