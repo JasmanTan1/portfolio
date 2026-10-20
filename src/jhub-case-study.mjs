@@ -6,13 +6,13 @@ import { esc } from './markdown.mjs';
 export const CASE_STUDY = {
   title: 'jhub — case study',
   description:
-    'jhub: a self-hosted family media hub (React PWA, Fastify, SQLite) designed and directed by Jasman Tan and built with AI coding agents. Four engineering stories with real numbers.',
+    'jhub: a self-hosted family media hub (React PWA, Fastify, SQLite) designed and directed by Jasman Tan and built with AI coding agents. Measured performance work, incident stories, security and test scale, with real numbers.',
   summary:
     'A self-hosted family media hub: films, shows, music and videos for each person in the family, on every phone including iPhone, reachable only over a private network.',
   role: 'Designed and directed; built with AI coding agents (Claude Code). I wrote the specs, made the design decisions, debugged from logs, and reviewed and verified every change. I did not hand-write the TypeScript.',
   facts: [
-    ['3,052', 'server unit tests'],
-    ['708', 'web unit tests'],
+    ['~3,200', 'server tests'],
+    ['~930', 'web tests'],
     ['100', 'written decision records'],
     ['500+', 'commits since late Sept 2026'],
   ],
@@ -27,7 +27,7 @@ export const CASE_STUDY = {
     ['SQLite', 'One database file holds per-person accounts, playlists, progress and the storage quota. Changes are forward-only migrations applied at start.'],
     ['Worker', 'A separate process runs the long jobs (scans, syncs, conversions, the daily health check) with a queue, pacing and retries, so slow work never blocks a person who is waiting.'],
     ['Jellyfin and Navidrome', 'They do the actual playback. jhub talks to them through an adapter layer, so their API quirks stay in one place (story 1 is about one of them).'],
-    ['Tailscale-only access', 'Nothing is exposed to the public internet. Only devices on the family’s private network can connect.'],
+    ['Caddy behind Tailscale', 'Caddy is the only front door and it listens on the private network only. It checks sign-in before anything reaches the API, and serves versioned pictures with a one-year immutable cache.'],
     ['Accounts and quota', 'Each person has their own account and library. A file several people keep is stored once and its size is split between them for the quota.'],
   ],
   stories: [
@@ -55,10 +55,60 @@ export const CASE_STUDY = {
     {
       h: '4. Working with AI agents safely',
       situation: 'Most of the code is written by AI coding agents, and a bad merge would break something my family uses every day.',
-      did: 'Each job starts as a written brief: numbered items, what the agent must not touch, how the result will be checked. Agents work on their own git branches and never merge or deploy; I do that. Every agent reports with test output, and I verify the claim (run the tests, open the screens at phone and desktop width, read the diff) instead of trusting it. The test gate is about 3,050 server and 700 web unit tests, plus Playwright end-to-end tests that run against a separate test instance with its own database, never the live one. Each non-trivial change gets a written decision record with a rollback note.',
+      did: 'Each job starts as a written brief: numbered items, what the agent must not touch, how the result will be checked. Agents work on their own git branches and never merge or deploy; I do that. Every agent reports with test output, and I verify the claim (run the tests, open the screens at phone and desktop width, read the diff) instead of trusting it. The test gate is about 3,200 server and 930 web tests, plus Playwright end-to-end tests that run against a separate test instance with its own database, never the live one. Each non-trivial change gets a written decision record with a rollback note.',
       result: 'Over 500 commits in a few weeks with a working app in daily use. The log-reading in story 1 and the test discipline in story 2 are the parts of this work that were mine.',
       lesson: 'A green exit code is not evidence. I check the end state.',
     },
+
+    {
+      h: '5. Making it feel instant: a measured performance round',
+      situation: 'The app worked, but on a phone every screen waited for the home server, which was busy: opening a show took 2.8 s and tapping Play 2.6 to 4.4 s.',
+      did: 'I set the rule that nothing ships without a before and after, measured on a rig that never touches the live system: a mocked stack, a Pixel 5 profile in Chromium with the CPU 4x slower, and the old and new builds run side by side, five runs each, medians. Then the agents built it in ranked order of measured win: one read of the item for a whole start of playback (14-16 server calls down to 9-11); the playback worked out ahead of the tap, 0.6 s after a title page opens; direct play for what the phone can already play (Matroska with H.264 and AAC plays as it is, no conversion); the last answer of each screen drawn in the first frame and refreshed behind it (stale-while-revalidate, per person, wiped on sign-out); a short server memory of the media server’s answers (a repeat inside 20 s costs it no call at all); and prefetch when a card has been on screen for 300 ms.',
+      result: 'See the table. Where the gain was zero I wrote that down too: Home with a quick media server got 5 to 15 % slower, because that screen waits for the phone’s own code, not for data.',
+      lesson: 'Honest numbers are part of the work: the table includes the row that did not improve.',
+    },
+    {
+      h: '6. First paint: a cache-first, versioned service worker',
+      situation: 'Even with fast data, the installed app opened slowly because the service worker asked the network for the page first (up to 3.5 s) and used its kept copy only as a fallback.',
+      did: 'I flipped the order: the page is answered at once from the kept copy of this build, and the browser checks for a newer build in the background. The risk of cache-first is a half-updated app (new page, old files), so the cache is named after the build and the install is all-or-nothing: if any file is missing or the list is for another build, the install fails and the working build keeps serving. API and streaming calls never go through the worker. A tiny script in the page head reads the last-seen mode from storage so the placeholder tab bar is right on the first frame. The agents wrote a test that runs the real worker file against a fake cache and a swappable server.',
+      result: 'Repeat visit on Fast 3G with 4x slower CPU: first paint 756 ms to 208 ms (-72 %), Home interactive 1401 ms to 892 ms (-36 %). First-ever visit is unchanged and I said so. Known trade-off, written down: after a deploy, the first open still shows the old build, and the next shows the new one.',
+      lesson: 'Cache-first is easy; cache-first without ever serving a mixed version is the real work.',
+    },
+    {
+      h: '7. Two incidents where the cause was not where the symptom was',
+      situation: 'First: the media server sat at 60 % CPU with bursts above 300 % while my worker ran, and at about 0 % without it, with nothing changing. Second: on Android, music went silent after a track change with the screen locked, while the app’s own level meter showed signal.',
+      did: 'For the first I made the worker the suspect and inventoried every job that calls the media server. The heavy ones asked library-wide questions (every song’s play data joined whatever the limit) for every person every hour, and re-listed the whole music library every 2 minutes while files were arriving, which looked like a rescan loop. I had the agents build a fake media server and a simulated clock to measure calls before and after. For the second I added a meter that sampled the audio graph every 2 s and proved the sound was being produced; the browser was muting the page’s output after a hidden track change. I compared browsers: Firefox on Android plays fine, Chrome and Brave do not.',
+      result: 'First: at least 80 % fewer calls and no library-wide query for an unchanged hour; an unchanged library now costs one cheap call per hour and the media server idles near 0 %. Second: proved to be a Chromium behaviour that no page code can get past, so I stopped trying to patch it, documented the workaround, and parked a native player as the real fix.',
+      lesson: 'Knowing when to stop: instrumentation told me the bug was outside my code, which saved days of guessing.',
+    },
+    {
+      h: '8. A test-suite time bomb, found by luck',
+      situation: 'On 2026-10-20 a test that had passed for days started failing without any code change.',
+      did: 'The digest job lists items from a rolling 14-day window, and the test fixtures used fixed October dates. The clock moved on, the fixtures aged out of the window, and the assertions began to fail. The code was right; the test depended on the real clock. I had the service take an injectable clock and pinned it in the affected tests, instead of moving the dates forward, which would only have postponed the failure by two weeks.',
+      result: 'The suite is deterministic again, and the fix is one small commit.',
+      lesson: 'Any test that reads the current time is a time bomb with a delay. Inject the clock.',
+    },
+  ],
+
+  perf: [
+    ['Open a show’s page, busy media server', '2.8 s', '0.54 s', 'ROUND2-AFTER'],
+    ['Open the video tab, busy media server', '2.2 s', '0.57 s', 'ROUND2-AFTER'],
+    ['Search results, busy media server', '1.6 s', '0.56 s', 'ROUND2-AFTER'],
+    ['Tap a seen tab (show), busy media server', '2.4 s', '0.36 s', 'ROUND2-AFTER'],
+    ['Tap Play, episode (mkv), busy media server', '4.4 s', '1.0 s', 'ROUND2-AFTER'],
+    ['Tap Play, film (mp4), busy media server', '2.6 s', '1.1 s', 'ROUND2-AFTER'],
+    ['Short video, first frame playing', '2.7 s', '1.5 s', 'AFTER (round 1)'],
+    ['Repeat visit, first paint (Fast 3G, 4x CPU)', '756 ms', '208 ms', 'INSTANT-SHELL'],
+    ['Repeat visit, Home interactive', '1401 ms', '892 ms', 'INSTANT-SHELL'],
+    ['Media server CPU while worker ran', 'bursts to 300 %', '~0 %', 'WORKER-JF-LOAD'],
+  ],
+  security: [
+    'Nothing is on the public internet. Caddy listens on the private network only, and checks sign-in before a call reaches the API.',
+    'The TV site is LAN-only: it answers only to devices on an allow-list, and everything else gets a 404.',
+    'Cookies are SameSite=Strict, and state-changing calls must also come from the app’s own origin (a CSRF check as a second layer).',
+    'The speaker links are signed and expire (story 3), with a separate signing domain for film sound.',
+    'Nobody can delete media through the media server: its permissions are rewritten every 5 minutes for every account, administrators included.',
+    'Decision records name what was rejected and why, so a security choice can be re-read later.',
   ],
   next: [
     'An off-site backup. Two disks in one box do not survive a fire or a theft.',
@@ -112,6 +162,13 @@ export const DIAGRAM = `<svg class="cs-diagram" viewBox="0 0 360 456" role="img"
   <text x="265" y="419" text-anchor="middle" class="cs-s">music playback</text>
 </svg>`;
 
+const perfTable = () => `
+      <div class="cs-tablewrap"><table class="cs-table">
+        <caption class="small muted">Medians of side-by-side runs on a mocked stack, Pixel 5 profile, CPU 4x slower. Never the live system.</caption>
+        <thead><tr><th scope="col">Measure</th><th scope="col">Before</th><th scope="col">After</th><th scope="col">Source</th></tr></thead>
+        <tbody>${CASE_STUDY.perf.map(([m, b, a, src]) => `<tr><th scope="row">${esc(m)}</th><td>${esc(b)}</td><td>${esc(a)}</td><td class="muted">${esc(src)}</td></tr>`).join('')}</tbody>
+      </table></div>`;
+
 const story = (p) => `
       <article class="cs-prob">
         <h3 class="cs-h3">${esc(p.h)}</h3>
@@ -164,14 +221,24 @@ export function caseStudyMain() {
 
   <section class="cs-sec" aria-labelledby="cs-prob">
     <div class="cs-wrap">
-      <h2 id="cs-prob"><span class="cs-n">03</span> Four engineering stories</h2>
+      <h2 id="cs-prob"><span class="cs-n">03</span> Engineering stories</h2>
       ${c.stories.map(story).join('')}
+      <h3 class="cs-h3">The numbers behind stories 5 to 7</h3>${perfTable()}
     </div>
   </section>
 
-  <section class="cs-sec cs-alt" aria-labelledby="cs-next">
+  <section class="cs-sec cs-alt" aria-labelledby="cs-sec">
     <div class="cs-wrap">
-      <h2 id="cs-next"><span class="cs-n">04</span> What I would do next</h2>
+      <h2 id="cs-sec"><span class="cs-n">04</span> Security</h2>
+      <ul class="cs-list">
+        ${c.security.map((p) => `<li>${esc(p)}</li>`).join('\n        ')}
+      </ul>
+    </div>
+  </section>
+
+  <section class="cs-sec" aria-labelledby="cs-next">
+    <div class="cs-wrap">
+      <h2 id="cs-next"><span class="cs-n">05</span> What I would do next</h2>
       <ul class="cs-list">
         ${c.next.map((p) => `<li>${esc(p)}</li>`).join('\n        ')}
       </ul>

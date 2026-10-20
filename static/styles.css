@@ -439,3 +439,10 @@ code { font-family: var(--mono); font-size: .88em; background: var(--bg-alt); pa
 
 .cs-role { max-width: 64ch; margin: 1rem 0 0; color: var(--text); font-size: .98rem; }
 .cs-lesson { margin: .6rem 0 0; font-style: italic; }
+.cs-tablewrap { overflow-x: auto; margin: 0 0 1rem; }
+.cs-table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+.cs-table caption { text-align: left; padding-bottom: .5rem; }
+.cs-table th, .cs-table td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+.cs-table thead th { font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); }
+.cs-table tbody th { font-weight: 500; color: var(--text); }
+.cs-table td { color: var(--text-muted); }
