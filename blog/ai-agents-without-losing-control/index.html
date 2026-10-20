@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Building with AI agents without losing control — Jasman Tan</title>
+<meta name="description" content="The rules I use so AI coding agents can move fast on a family app without me trusting their reports: branch-only agents, owner-run merges, a separate test instance, and verifying claims instead of believing them.">
+<meta name="author" content="Jasman Tan">
+<link rel="canonical" href="https://jasmantan.com/blog/ai-agents-without-losing-control/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jasman Tan">
+<meta property="og:title" content="Building with AI agents without losing control — Jasman Tan">
+<meta property="og:description" content="The rules I use so AI coding agents can move fast on a family app without me trusting their reports: branch-only agents, owner-run merges, a separate test instance, and verifying claims instead of believing them.">
+<meta property="og:url" content="https://jasmantan.com/blog/ai-agents-without-losing-control/">
+<meta property="og:image" content="https://jasmantan.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Jasman Tan — Software Engineer, Singapore">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0B0D10">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/styles.css?v=14c13c5a">
+<link rel="alternate" type="application/rss+xml" href="/blog/feed.xml" title="Jasman Tan — Build notes">
+<link rel="alternate" type="text/markdown" href="/resume.md" title="Résumé (Markdown)">
+
+<script>/* applied before first paint so a chosen theme never flashes */try{var t=localStorage.getItem('jt-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body class="blog-page">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="wordmark" href="/" aria-label="Jasman Tan — home">JasmanTan<span class="accent">._</span></a>
+    <nav aria-label="Sections"><a class="nav-keep" href="/blog/">Blog</a><a class="nav-keep" href="/#work">Portfolio</a></nav>
+    
+<button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+  <span class="visually-hidden">Switch between light and dark theme</span>
+  <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><g class="rays"><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></g></svg>
+  <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4a8.3 8.3 0 1 0 10.5 10.5z"/></svg>
+</button>
+  </div>
+</header>
+
+<main id="main" class="blog">
+  <article class="blog-post">
+    <header class="blog-hero">
+      <div class="blog-wrap">
+        <p class="kicker"><a href="/blog/">// blog</a></p>
+        <h1>Building with AI agents without losing control</h1>
+        <p class="blog-lede">The rules I use so AI coding agents can move fast on a family app without me trusting their reports: branch-only agents, owner-run merges, a separate test instance, and verifying claims instead of believing them.</p>
+        <p class="blog-meta"><time datetime="2026-10-16">16 October 2026</time> · 4 min read · by Jasman Tan</p>
+      </div>
+    </header>
+    <div class="blog-wrap blog-body">
+<p>Most of the code in my projects is written by AI coding agents (Claude Code). I come from C and C++ and from MES and SQL work, and I did not hand-write the TypeScript in jhub, my family's self-hosted media hub. What I do is write the briefs, make the design decisions, read the logs, check the agents' claims, and own the merges and deploys. Here is the process, and the specific times it caught something.</p>
+<h2 id="the-rules">The rules</h2>
+<p><strong>Agents work on branches and never merge or deploy.</strong> An agent gets a worktree and a branch. It can commit there. It cannot touch the main branch and it does not deploy. I run the one command that does, so there is always a human decision between &quot;the agent says it works&quot; and &quot;my family's app changes&quot;.</p>
+<p><strong>A brief is a contract.</strong> Numbered items, what must not be touched, and how the result will be checked. If I cannot write down how I will check it, I do not understand the task well enough to hand it off.</p>
+<p><strong>Tests run on a separate instance.</strong> End-to-end tests start their own server with their own database. Never the live one. (More on that below, because I broke this rule by accident.)</p>
+<p><strong>I verify claims instead of reading reports.</strong> &quot;Tests pass&quot; is a sentence. I re-run the suite, check the branch is really built on what is live (<code>git merge-base</code>, or a fast-forward check before merging), open the screenshots at phone and desktop width, and read the diff. The gate for jhub is about 3,050 server and 700 web unit tests (3,052 and 708 on the last full run I recorded) plus Playwright end-to-end suites.</p>
+<p><strong>Every non-trivial change gets a written decision record</strong>, with a rollback note. There are about a hundred of them, and they are how I find out later why something is the way it is.</p>
+<h2 id="catches">Catches</h2>
+<p><strong>A flaky test that was a real race.</strong> A new test failed one run in a while. Re-running would have made it go away. Instead the cause was chased down, and it was a conversion that could start after the server had begun shutting down. The fix was a <code>closed</code> flag and a refusal to spawn. A retry loop would have hidden a real bug.</p>
+<p><strong>A silent merge failure.</strong> In an earlier project, a fast-forward merge run by one of my coordinating agents aborted without anyone noticing: untracked generated files in the working tree blocked it, and the command's output had been piped through <code>tail -1</code>, which kept only the last line and discarded the exit code. The branch I thought was merged was not. I caught it because I checked the end state (does the branch contain the commits?) rather than trusting that the command had run. The rule that came out of it is now written down: never pipe a merge through <code>tail</code>; check the exit code.</p>
+<p><strong>Files that would have broken a deploy.</strong> In a game project, stray untracked engine metadata files (<code>.uid</code> and <code>.import</code> files) sat in the deploy worktrees. They blocked a release until they were removed. I caught them before the deploy, because &quot;the build passed&quot; says nothing about the state of the checkout.</p>
+<p><strong>A test run that touched the live database.</strong> An agent ran the default Playwright configuration for jhub, which starts the app against the real database. At 08:09 UTC on 15 October it applied a new migration there: a new, empty table and an index. I checked the live app (unaffected, HTTP 200), and checked that the table matched what the pending deploy would create anyway, so the later deploy would skip it cleanly. No data rows changed. So the damage was nil, but the process was wrong: my own rule had a hole, because the default config pointed at the live path. I logged it as an incident in my decision log, and the follow-up is on my to-do list: make the end-to-end config refuse to start on the live database path. I have not done that yet, and I would rather say so than imply it is fixed.</p>
+<h2 id="what-this-costs">What this costs</h2>
+<p>It is slower than &quot;let the agent push&quot;. Briefs take time to write, and verification takes time to do. But the family uses the app daily, and the point of the process is that I can say what each deploy contained and why I believed it was safe.</p>
+<p>The part I find most useful as an engineer is that these are normal software-engineering habits (code review, CI gates, separate environments, rollback plans) applied to an unusual team member. The agent is fast, tireless and confident, and confidence is the thing to verify.</p>
+<h2 id="what-i-d-tell-another-engineer">What I'd tell another engineer</h2>
+<ul><li>Give agents branches, not main. Keep merge and deploy as your own explicit act.</li><li>Write the check into the brief before the work starts.</li><li>Never accept &quot;it ran&quot; or a zero exit code as evidence. Look at the end state.</li><li>A flaky test is a bug report. Do not retry it away.</li><li>When your safety rule has a hole, write the incident down plainly and fix the rule, not just the instance.</li></ul>
+      <p class="small muted blog-note">I design, direct and verify the projects I write about. The code is written by AI coding agents (Claude Code). These posts are about what I diagnosed, decided and checked. More on the project: <a href="/jhub/">the jhub case study</a>.</p>
+    </div>
+  </article>
+  <section class="blog-sec blog-more" aria-labelledby="more-h">
+    <div class="blog-wrap">
+      <h2 id="more-h">More build notes</h2>
+      <ul class="blog-more-list">
+        <li><a href="/blog/speaker-played-nothing/">Why my speaker played nothing</a> <span class="muted small">· 4 min</span></li>
+        <li><a href="/blog/playlist-sync-six-days/">The playlist sync that ran for six days</a> <span class="muted small">· 5 min</span></li>
+      </ul>
+      <p class="cs-cta"><a class="btn" href="/blog/">All posts</a> <a class="btn" href="/#work">Back to projects</a></p>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p class="footer-contact">
+      <a href="mailto:jasmantan@hotmail.com">jasmantan@hotmail.com</a>
+      <a href="https://github.com/JasmanTan1" rel="me noopener">GitHub</a>
+      <a href="https://linkedin.com/in/jasmantan" rel="me noopener">LinkedIn</a>
+      
+    </p>
+    <p class="muted small">Jasman Tan · Singapore · Built as a static site; the source is on GitHub.</p>
+  </div>
+</footer>
+<script src="/main.js?v=46f493dd" defer></script>
+</body>
+</html>

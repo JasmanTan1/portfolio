@@ -22,7 +22,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="/styles.css?v=ae96746b">
+<link rel="stylesheet" href="/styles.css?v=14c13c5a">
+<link rel="alternate" type="application/rss+xml" href="/blog/feed.xml" title="Jasman Tan — Build notes">
 <link rel="alternate" type="text/markdown" href="/resume.md" title="Résumé (Markdown)">
 <link rel="alternate" type="application/pdf" href="/resume.pdf" title="Résumé (PDF)">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Jasman Tan","jobTitle":"Software Engineer","url":"https://jasmantan.com/","email":"mailto:jasmantan@hotmail.com","address":{"@type":"PostalAddress","addressLocality":"Singapore","addressCountry":"SG"},"worksFor":{"@type":"Organization","name":"ENNOVI (formerly Interplex)"},"alumniOf":[{"@type":"EducationalOrganization","name":"DigiPen Institute of Technology"},{"@type":"EducationalOrganization","name":"Nanyang Polytechnic"}],"hasCredential":[{"@type":"EducationalOccupationalCredential","name":"Arcstone System Assessment — Intermediate","recognizedBy":{"@type":"Organization","name":"Arcstone Pte. Ltd."}},{"@type":"EducationalOccupationalCredential","name":"Certified HYDRA 8 Developer","recognizedBy":{"@type":"Organization","name":"MPDV"}}],"knowsAbout":["T-SQL / SQL Server (queries, deploy scripts, SAP outbound queues)","C# / .NET","Workflow design (JSON definitions, Liquid templates)","MES + SAP integration","C / C++ (DigiPen, games)","JavaScript","TypeScript","HTML / CSS","Python (build tooling and my own apps)","PowerShell","Dart","GDScript",".NET","Workflow engine (Orchard Core based)","SQL Server","Stored procedures & performance fixes","PostgreSQL / Supabase","SQLite","REST APIs","SAP ERP integration","ETL-style reporting","Timezone-correct multi-site data","Dashboards","React","Installable web apps (offline, web push)","Flutter (Android & iOS)","Responsive multi-language UIs (6 locales)","Three.js","Git & GitHub","GitHub Actions (CI/CD, Pages)","Playwright end-to-end tests","Change request → production → verification","L1/L2/L3 production support","Technical & functional documentation","Linux (Ubuntu Server)","systemd services & timers","Docker & Compose","Cloudflare Tunnel & Zero Trust Access","Tailscale & Caddy (HTTPS)","Backup & restore","Claude Code","Multi-agent builds: briefs, worktrees, test gates","LLM tool use in apps","LLM API integration with offline fallbacks"],"sameAs":["https://github.com/JasmanTan1","https://linkedin.com/in/jasmantan"]}</script>
@@ -39,6 +40,7 @@
       <a href="#build"><span class="nav-slash" aria-hidden="true">//</span> how i build</a>
       <a href="#stack"><span class="nav-slash" aria-hidden="true">//</span> stack</a>
       <a href="#experience"><span class="nav-slash" aria-hidden="true">//</span> experience</a>
+      <a href="/blog/"><span class="nav-slash" aria-hidden="true">//</span> blog</a>
       <a class="nav-keep" href="/resume/"><span class="nav-slash" aria-hidden="true">//</span> résumé</a>
     </nav>
     
@@ -165,8 +167,8 @@
         <summary>How it works</summary>
         <div class="more-body">
           <p><strong>The problem.</strong> Family videos and music end up scattered across phones, old drives and apps that each work differently. I wanted one private place for our library that keeps working on a plane, and that family members who are not technical can use without asking me.</p>
-          <p><strong>What I built.</strong> A TypeScript monorepo — a Fastify 5 API and a background worker, a React 19 installable web app, SQLite with 80+ forward-only migrations — in front of a Jellyfin video server and a Navidrome music server, all in Docker Compose. Each person has their own library, playlists and storage quota, and a file several people keep is counted once and split between them. Videos remember where each person stopped and show chapters; anything can be saved to the phone for offline use, with a service worker and resumable downloads. Notifications are web push, and their action buttons still work away from home through a Cloudflare Worker relay that holds HMAC-signed decisions until the server pulls them (sized to stay inside the free tier). An Ops page shows every moving part as green, amber or red with a one-line fix, and admins get a weekly summary.</p>
-          <p><strong>Where it stands.</strong> In use by my family since October 2026, reachable only over Tailscale, never the public internet. Built in a few weeks of evenings with AI coding agents (see How I build): 280+ commits, a log of 75+ architecture decisions with rollback notes, and about 2,400 unit tests plus 330 Playwright browser tests at phone and desktop sizes that every deploy must pass.</p>
+          <p><strong>What I built.</strong> A TypeScript monorepo — a Fastify 5 API and a background worker, a React 19 installable web app, SQLite with 80+ forward-only migrations — in front of a Jellyfin video server and a Navidrome music server, all in Docker Compose. Each person has their own library, playlists and storage quota, and a file several people keep is counted once and split between them. Videos remember where each person stopped and show chapters; anything can be saved to the phone for offline use, with a service worker and resumable offline saves. Notifications are web push, and their action buttons still work away from home through a Cloudflare Worker relay that holds HMAC-signed decisions until the server pulls them (sized to stay inside the free tier). An Ops page shows every moving part as green, amber or red with a one-line fix, and admins get a weekly summary.</p>
+          <p><strong>Where it stands.</strong> In use by my family since October 2026, reachable only over Tailscale, never the public internet. Built in a few weeks of evenings with AI coding agents (see How I build): 500+ commits, a log of 100 architecture decisions with rollback notes, and about 3,700 unit tests plus Playwright browser tests at phone and desktop sizes that every deploy must pass.</p>
           
           
         </div>
@@ -320,7 +322,7 @@
         <article class="card do-card reveal">
           <div class="do-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.5 3.2 8 7.5 9.5 4.3-1.5 7.5-5 7.5-9.5V6Z"/><path d="m8.7 12.2 2.3 2.3 4.3-4.6"/></svg></div>
           <h3>Gates, not trust</h3>
-          <p>Agent branches meet in an integration branch, and the whole suite runs there: type checks, about 2,400 unit tests and 330 browser tests at phone and desktop sizes. Master only fast-forwards to a green build, so rolling back is one command.</p>
+          <p>Agent branches meet in an integration branch, and the whole suite runs there: type checks, about 3,700 unit tests and Playwright browser tests at phone and desktop sizes. Master only fast-forwards to a green build, so rolling back is one command.</p>
         </article>
         <article class="card do-card reveal">
           <div class="do-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.5c.9-3.6 3.8-5.6 7.2-5.6s6.3 2 7.2 5.6"/></svg></div>

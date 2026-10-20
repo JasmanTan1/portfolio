@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build notes — Jasman Tan</title>
+<meta name="description" content="Build notes by Jasman Tan: engineering stories from jhub, a self-hosted family media hub built with AI coding agents. Debugging, testing, operations and working with agents.">
+<meta name="author" content="Jasman Tan">
+<link rel="canonical" href="https://jasmantan.com/blog/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jasman Tan">
+<meta property="og:title" content="Build notes — Jasman Tan">
+<meta property="og:description" content="Build notes by Jasman Tan: engineering stories from jhub, a self-hosted family media hub built with AI coding agents. Debugging, testing, operations and working with agents.">
+<meta property="og:url" content="https://jasmantan.com/blog/">
+<meta property="og:image" content="https://jasmantan.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Jasman Tan — Software Engineer, Singapore">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0B0D10">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/styles.css?v=14c13c5a">
+<link rel="alternate" type="application/rss+xml" href="/blog/feed.xml" title="Jasman Tan — Build notes">
+<link rel="alternate" type="text/markdown" href="/resume.md" title="Résumé (Markdown)">
+
+<script>/* applied before first paint so a chosen theme never flashes */try{var t=localStorage.getItem('jt-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body class="blog-page">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="wordmark" href="/" aria-label="Jasman Tan — home">JasmanTan<span class="accent">._</span></a>
+    <nav aria-label="Sections"><a class="nav-keep" href="/blog/">Blog</a><a class="nav-keep" href="/#work">Portfolio</a></nav>
+    
+<button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+  <span class="visually-hidden">Switch between light and dark theme</span>
+  <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><g class="rays"><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></g></svg>
+  <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4a8.3 8.3 0 1 0 10.5 10.5z"/></svg>
+</button>
+  </div>
+</header>
+
+<main id="main" class="blog">
+  <header class="blog-hero">
+    <div class="blog-wrap">
+      <p class="kicker">// blog</p>
+      <h1>Build notes</h1>
+      <p class="blog-lede">I design, direct and verify the projects I write about. The code is written by AI coding agents (Claude Code). These posts are about what I diagnosed, decided and checked.</p>
+      <p class="small muted"><a href="/blog/feed.xml">RSS feed</a> · <a href="/jhub/">jhub case study</a></p>
+    </div>
+  </header>
+  <section class="blog-sec" aria-label="Posts">
+    <div class="blog-wrap">
+      <ol class="blog-list">
+        
+        <li class="blog-item">
+          <p class="blog-meta"><time datetime="2026-10-16">16 October 2026</time> · 4 min read</p>
+          <h2><a href="/blog/ai-agents-without-losing-control/">Building with AI agents without losing control</a></h2>
+          <p>The rules I use so AI coding agents can move fast on a family app without me trusting their reports: branch-only agents, owner-run merges, a separate test instance, and verifying claims instead of believing them.</p>
+        </li>
+        <li class="blog-item">
+          <p class="blog-meta"><time datetime="2026-10-16">16 October 2026</time> · 4 min read</p>
+          <h2><a href="/blog/speaker-played-nothing/">Why my speaker played nothing</a></h2>
+          <p>Casting a video's sound to a smart speaker showed &quot;playing&quot; and made no noise. Reproducing it in real Chrome, a range request answered wrongly, a flaky test that was a real race, and a sandbox bug the tests could not see.</p>
+        </li>
+        <li class="blog-item">
+          <p class="blog-meta"><time datetime="2026-10-16">16 October 2026</time> · 5 min read</p>
+          <h2><a href="/blog/playlist-sync-six-days/">The playlist sync that ran for six days</a></h2>
+          <p>A media server API quirk made my sync delete and recreate playlists on every pass. Nothing alerted me for six days. How I found it, fixed it in two passes, and added a 03:00 health check.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p class="footer-contact">
+      <a href="mailto:jasmantan@hotmail.com">jasmantan@hotmail.com</a>
+      <a href="https://github.com/JasmanTan1" rel="me noopener">GitHub</a>
+      <a href="https://linkedin.com/in/jasmantan" rel="me noopener">LinkedIn</a>
+      
+    </p>
+    <p class="muted small">Jasman Tan · Singapore · Built as a static site; the source is on GitHub.</p>
+  </div>
+</footer>
+<script src="/main.js?v=46f493dd" defer></script>
+</body>
+</html>

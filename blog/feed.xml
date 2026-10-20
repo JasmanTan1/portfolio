@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jasman Tan — Build notes</title>
+    <link>https://jasmantan.com/blog/</link>
+    <description>Build notes by Jasman Tan: engineering stories from jhub, a self-hosted family media hub built with AI coding agents. Debugging, testing, operations and working with agents.</description>
+    <language>en</language>
+    <atom:link href="https://jasmantan.com/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <lastBuildDate>Fri, 16 Oct 2026 08:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Building with AI agents without losing control</title>
+      <link>https://jasmantan.com/blog/ai-agents-without-losing-control/</link>
+      <guid isPermaLink="true">https://jasmantan.com/blog/ai-agents-without-losing-control/</guid>
+      <pubDate>Fri, 16 Oct 2026 08:00:00 GMT</pubDate>
+      <description>The rules I use so AI coding agents can move fast on a family app without me trusting their reports: branch-only agents, owner-run merges, a separate test instance, and verifying claims instead of believing them.</description>
+    </item>
+    <item>
+      <title>Why my speaker played nothing</title>
+      <link>https://jasmantan.com/blog/speaker-played-nothing/</link>
+      <guid isPermaLink="true">https://jasmantan.com/blog/speaker-played-nothing/</guid>
+      <pubDate>Fri, 16 Oct 2026 08:00:00 GMT</pubDate>
+      <description>Casting a video's sound to a smart speaker showed "playing" and made no noise. Reproducing it in real Chrome, a range request answered wrongly, a flaky test that was a real race, and a sandbox bug the tests could not see.</description>
+    </item>
+    <item>
+      <title>The playlist sync that ran for six days</title>
+      <link>https://jasmantan.com/blog/playlist-sync-six-days/</link>
+      <guid isPermaLink="true">https://jasmantan.com/blog/playlist-sync-six-days/</guid>
+      <pubDate>Fri, 16 Oct 2026 08:00:00 GMT</pubDate>
+      <description>A media server API quirk made my sync delete and recreate playlists on every pass. Nothing alerted me for six days. How I found it, fixed it in two passes, and added a 03:00 health check.</description>
+    </item>
+  </channel>
+</rss>

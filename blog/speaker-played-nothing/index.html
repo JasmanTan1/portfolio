@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why my speaker played nothing — Jasman Tan</title>
+<meta name="description" content="Casting a video's sound to a smart speaker showed &quot;playing&quot; and made no noise. Reproducing it in real Chrome, a range request answered wrongly, a flaky test that was a real race, and a sandbox bug the tests could not see.">
+<meta name="author" content="Jasman Tan">
+<link rel="canonical" href="https://jasmantan.com/blog/speaker-played-nothing/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jasman Tan">
+<meta property="og:title" content="Why my speaker played nothing — Jasman Tan">
+<meta property="og:description" content="Casting a video's sound to a smart speaker showed &quot;playing&quot; and made no noise. Reproducing it in real Chrome, a range request answered wrongly, a flaky test that was a real race, and a sandbox bug the tests could not see.">
+<meta property="og:url" content="https://jasmantan.com/blog/speaker-played-nothing/">
+<meta property="og:image" content="https://jasmantan.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Jasman Tan — Software Engineer, Singapore">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0B0D10">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/styles.css?v=14c13c5a">
+<link rel="alternate" type="application/rss+xml" href="/blog/feed.xml" title="Jasman Tan — Build notes">
+<link rel="alternate" type="text/markdown" href="/resume.md" title="Résumé (Markdown)">
+
+<script>/* applied before first paint so a chosen theme never flashes */try{var t=localStorage.getItem('jt-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body class="blog-page">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="wordmark" href="/" aria-label="Jasman Tan — home">JasmanTan<span class="accent">._</span></a>
+    <nav aria-label="Sections"><a class="nav-keep" href="/blog/">Blog</a><a class="nav-keep" href="/#work">Portfolio</a></nav>
+    
+<button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+  <span class="visually-hidden">Switch between light and dark theme</span>
+  <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><g class="rays"><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></g></svg>
+  <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4a8.3 8.3 0 1 0 10.5 10.5z"/></svg>
+</button>
+  </div>
+</header>
+
+<main id="main" class="blog">
+  <article class="blog-post">
+    <header class="blog-hero">
+      <div class="blog-wrap">
+        <p class="kicker"><a href="/blog/">// blog</a></p>
+        <h1>Why my speaker played nothing</h1>
+        <p class="blog-lede">Casting a video's sound to a smart speaker showed &quot;playing&quot; and made no noise. Reproducing it in real Chrome, a range request answered wrongly, a flaky test that was a real race, and a sandbox bug the tests could not see.</p>
+        <p class="blog-meta"><time datetime="2026-10-16">16 October 2026</time> · 4 min read · by Jasman Tan</p>
+      </div>
+    </header>
+    <div class="blog-wrap blog-body">
+<p>jhub, my self-hosted family media hub, can cast a video's sound to a Google speaker. I designed the feature and directed the work; the code was written by AI coding agents. Getting it to actually make sound took three separate bugs, and each one taught me something different.</p>
+<h2 id="the-symptom">The symptom</h2>
+<p>I cast a video's sound to a speaker. The speaker's state said &quot;playing&quot;. The speaker said nothing. No error anywhere, which is the worst kind of bug report.</p>
+<p>The key fact is that a Cast receiver is Chrome. So the question became &quot;what would Chrome do with this URL?&quot;, and the way to answer is to ask real Chrome, not read the protocol docs.</p>
+<h2 id="hypothesis-then-reproduction">Hypothesis, then reproduction</h2>
+<p>The server made the sound on the fly: ffmpeg converted the audio and piped it straight out as a fragmented MP4. That stream has no length, and the response said <code>Accept-Ranges: none</code>. My hypothesis was that Chrome needed to seek in the file, and a pipe cannot be seeked.</p>
+<p>I had the agent reproduce it in real Chrome rather than assume. The result matched: <code>play()</code> never started and the media element reported error 3 (decode). In the reproduction, Chrome asked for <code>Range: bytes=196608-</code>, a point in the middle of the file, and the server answered <code>200</code> with the body from byte 0. A client that asks for the middle and gets the beginning has nothing sensible left to do but fail.</p>
+<h2 id="the-fix-a-seekable-file-and-honest-http">The fix: a seekable file, and honest HTTP</h2>
+<p>Instead of a live pipe, the sound is now converted once, when the cast address is created, into a small file with its index at the front. It is kept until the address expires and served the way a file should be:</p>
+<ul><li><code>200</code> with a full body and a length</li><li><code>206 Partial Content</code> for a valid <code>Range</code></li><li><code>416</code> for a range past the end</li></ul>
+<p>The range parser is small and has its own unit test. This is a real extract from the test:</p>
+<pre class="bp-code" tabindex="0" data-lang="ts"><code>expect(parseRange('bytes=0-', 100)).toEqual({ start: 0, end: 99 });
+expect(parseRange('bytes=-10', 100)).toEqual({ start: 90, end: 99 });
+expect(parseRange('bytes=100-', 100)).toBe('bad');   // -&gt; 416
+expect(parseRange('bytes=0-1,5-6', 100)).toBeNull(); // multi-range: ignore</code></pre>
+<p>A second test checks the file itself: the <code>moov</code> box (the index) comes before <code>mdat</code> (the data), and there are no <code>moof</code> fragments. That is the regression test for the exact thing that made Chrome fail.</p>
+<h2 id="the-flaky-test-that-was-a-real-bug">The flaky test that was a real bug</h2>
+<p>After the change, one of the new tests failed now and then. The easy move is to re-run until green. I had it treated as a bug report, and it was one.</p>
+<p>The server could start a conversion after it had already been told to shut down. A conversion waiting on the media server could finish waiting, then launch ffmpeg during or after teardown. In a test that shows up as a random failure in the next test. In production it could be a stray process after a restart. The fix is two lines: set a <code>closed</code> flag when the server closes, and refuse to spawn once it is set.</p>
+<pre class="bp-code" tabindex="0" data-lang="ts"><code>app.addHook('onClose', async () =&gt; { this.closed = true; /* then stop our own children */ });
+// ...
+if (this.closed) return reject(new ApiFail(503, 'shutting_down', 'jhub is shutting down.'));</code></pre>
+<p>The same commit made one assertion find its own conversion instead of grabbing &quot;the first ffmpeg call&quot;, which could be left over from a previous test.</p>
+<h2 id="the-bug-the-tests-could-not-see">The bug the tests could not see</h2>
+<p>The cache of converted files was first placed in the system temp folder. All tests passed. But jhub runs as a systemd service with <code>ProtectSystem=strict</code>, which makes almost the whole filesystem read-only for that process. Under the real unit, creating the cache folder fails on every sound cast.</p>
+<p>Tests passed because tests do not run inside the unit's sandbox. That is the lesson, not the typo: the environment the tests run in was different from the environment production runs in in exactly the way that mattered.</p>
+<p>The fix, which is in progress on a branch and not yet merged or deployed as I write this, puts the cache under the app's own data directory (next to the database, which the unit is allowed to write), with an environment override for tests. And a test asserts the path, so nobody moves it back:</p>
+<pre class="bp-code" tabindex="0" data-lang="ts"><code>expect(castCacheDir('/data/jhub')).toBe('/data/jhub/cast-sound');
+expect(castCacheDir('/data/jhub').startsWith(os.tmpdir())).toBe(false);</code></pre>
+<p>It is a unit test standing in for a sandbox test, which is a weaker thing than running the suite under the unit. I would like to close that gap.</p>
+<h2 id="what-i-d-tell-another-engineer">What I'd tell another engineer</h2>
+<ul><li>When a client is a known piece of software (here, Chrome), reproduce with that software before theorising.</li><li>&quot;Playing&quot; is a claim by a state machine, not evidence of sound. Verify the end state.</li><li>Treat a flaky test as a bug report until proven otherwise. This one was a real shutdown race.</li><li>Match the test environment to the production sandbox for anything that touches the filesystem, network or user. Where you cannot, add a test that pins the assumption.</li></ul>
+      <p class="small muted blog-note">I design, direct and verify the projects I write about. The code is written by AI coding agents (Claude Code). These posts are about what I diagnosed, decided and checked. More on the project: <a href="/jhub/">the jhub case study</a>.</p>
+    </div>
+  </article>
+  <section class="blog-sec blog-more" aria-labelledby="more-h">
+    <div class="blog-wrap">
+      <h2 id="more-h">More build notes</h2>
+      <ul class="blog-more-list">
+        <li><a href="/blog/ai-agents-without-losing-control/">Building with AI agents without losing control</a> <span class="muted small">· 4 min</span></li>
+        <li><a href="/blog/playlist-sync-six-days/">The playlist sync that ran for six days</a> <span class="muted small">· 5 min</span></li>
+      </ul>
+      <p class="cs-cta"><a class="btn" href="/blog/">All posts</a> <a class="btn" href="/#work">Back to projects</a></p>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p class="footer-contact">
+      <a href="mailto:jasmantan@hotmail.com">jasmantan@hotmail.com</a>
+      <a href="https://github.com/JasmanTan1" rel="me noopener">GitHub</a>
+      <a href="https://linkedin.com/in/jasmantan" rel="me noopener">LinkedIn</a>
+      
+    </p>
+    <p class="muted small">Jasman Tan · Singapore · Built as a static site; the source is on GitHub.</p>
+  </div>
+</footer>
+<script src="/main.js?v=46f493dd" defer></script>
+</body>
+</html>

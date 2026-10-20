@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The playlist sync that ran for six days — Jasman Tan</title>
+<meta name="description" content="A media server API quirk made my sync delete and recreate playlists on every pass. Nothing alerted me for six days. How I found it, fixed it in two passes, and added a 03:00 health check.">
+<meta name="author" content="Jasman Tan">
+<link rel="canonical" href="https://jasmantan.com/blog/playlist-sync-six-days/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jasman Tan">
+<meta property="og:title" content="The playlist sync that ran for six days — Jasman Tan">
+<meta property="og:description" content="A media server API quirk made my sync delete and recreate playlists on every pass. Nothing alerted me for six days. How I found it, fixed it in two passes, and added a 03:00 health check.">
+<meta property="og:url" content="https://jasmantan.com/blog/playlist-sync-six-days/">
+<meta property="og:image" content="https://jasmantan.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Jasman Tan — Software Engineer, Singapore">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0B0D10">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/styles.css?v=14c13c5a">
+<link rel="alternate" type="application/rss+xml" href="/blog/feed.xml" title="Jasman Tan — Build notes">
+<link rel="alternate" type="text/markdown" href="/resume.md" title="Résumé (Markdown)">
+
+<script>/* applied before first paint so a chosen theme never flashes */try{var t=localStorage.getItem('jt-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body class="blog-page">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="wordmark" href="/" aria-label="Jasman Tan — home">JasmanTan<span class="accent">._</span></a>
+    <nav aria-label="Sections"><a class="nav-keep" href="/blog/">Blog</a><a class="nav-keep" href="/#work">Portfolio</a></nav>
+    
+<button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+  <span class="visually-hidden">Switch between light and dark theme</span>
+  <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><g class="rays"><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></g></svg>
+  <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4a8.3 8.3 0 1 0 10.5 10.5z"/></svg>
+</button>
+  </div>
+</header>
+
+<main id="main" class="blog">
+  <article class="blog-post">
+    <header class="blog-hero">
+      <div class="blog-wrap">
+        <p class="kicker"><a href="/blog/">// blog</a></p>
+        <h1>The playlist sync that ran for six days</h1>
+        <p class="blog-lede">A media server API quirk made my sync delete and recreate playlists on every pass. Nothing alerted me for six days. How I found it, fixed it in two passes, and added a 03:00 health check.</p>
+        <p class="blog-meta"><time datetime="2026-10-16">16 October 2026</time> · 5 min read · by Jasman Tan</p>
+      </div>
+    </header>
+    <div class="blog-wrap blog-body">
+<p>jhub is the self-hosted family media hub I designed and direct. The code is written by AI coding agents (Claude Code); I write the specs, read the logs, make the decisions, and verify and deploy the changes. This post is about a bug in one of those agent-written pieces, and about the part that was my job: noticing it, finding the real cause, and making sure it could not hide again.</p>
+<h2 id="what-it-looked-like">What it looked like</h2>
+<p>The media server (Jellyfin 12.1) was sitting at one full CPU core, and its log was filling with errors, about 6,000 &quot;Error processing request&quot; lines an hour. By the time I looked it had been like that for six days. On the day I found it, the numbers were 377 playlist folders on disk, of which 248 were junk with names like <code>My music1111...</code> up to 255 characters, and 11,751 errors in two hours.</p>
+<p>Nothing had told me. The family could still play music, so nobody complained. The server was just quietly burning a core and filling its log with errors.</p>
+<h2 id="reading-the-logs">Reading the logs</h2>
+<p>jhub mirrors each person's playlists into Jellyfin. The first suspect was the obvious one: any song change was handled as &quot;delete the playlist and create it again&quot;. That was real, but it only fires when songs change. It did not explain a loop that ran every pass.</p>
+<p>The second trigger did. On Jellyfin 12.1, reading one playlist with an API key answers <code>400 &quot;Guid can't be empty&quot;</code>, because that call takes the user from the sign-in, and an API key has no user. The sync code had a fallback: if it could not read the sharing state, ask every other user whether they can see the playlist. On 12.1 every user can see every playlist, so 123 of 125 mapped playlists looked &quot;shared&quot;. The planner then emitted &quot;make it private&quot;, implemented as delete and create, on every pass.</p>
+<p>Jellyfin names a playlist's folder after its name and, if the old folder is still there, appends a &quot;1&quot;. Repeat for days and the names reach 255 characters, at which point creation fails with &quot;path too long&quot; and the errors begin.</p>
+<p>Here is the shape of the mistake, simplified and illustrative (not the real code):</p>
+<pre class="bp-code" tabindex="0" data-lang="ts"><code>// What the fallback effectively did
+const shared = (await readSharing(id)) ?? (await everyoneCanSee(id)); // 400 -&gt; fallback -&gt; always true
+if (shared &amp;&amp; wantPrivate) await recreate(id);                         // every pass, forever</code></pre>
+<p>What I took from it: a fallback that returns a confident answer when the real question failed is worse than an error.</p>
+<h2 id="fix-in-two-passes">Fix, in two passes</h2>
+<p><strong>Pass one (D92).</strong> Edit playlists in place instead of deleting them. Add and remove songs through the item endpoints, and treat &quot;sharing unknown&quot; as &quot;private&quot;. Remake a playlist only when the server positively says it is shared, and at most once per playlist per 24 hours, with the timestamp written before the work starts. Also: an error is not &quot;gone&quot;. Only a clean &quot;no such item&quot; leads to a create; a 500 or a failed read leaves that playlist alone for the pass and logs once.</p>
+<p>I could not test the in-place calls against the live server first, because the investigation was read-only. The decision record says so in plain words: written from the API docs, tested against a fake, first live pass will show whether 12.1 accepts them.</p>
+<p><strong>Pass two (D92b),</strong> from the live worker log after deploy. The reorder call turned out to need a user that an API key does not have, so a wrong order is now fixed by removing the wrong tail and appending it again. And seven people each having a playlist called &quot;My music&quot; meant the &quot;1&quot; chain was still growing, so a create whose name would collide is now made under a unique temporary name and renamed at once.</p>
+<p>Cleanup used a script the agents wrote, which is a dry run by default and opens the database read-only. The result: playlist folders went from 377 to 130, Jellyfin errors from about 6,000 an hour to zero, and idle CPU to about 0.1 percent on a 10-second sample.</p>
+<h2 id="so-it-cannot-hide-again">So it cannot hide again</h2>
+<p>The real failure was not the bug. It was six days of nobody knowing. So the next change was a daily health check (D93) that runs at 03:00 Singapore time inside the existing worker, with no new cron job and no new service:</p>
+<ul><li>Jellyfin error lines in the last 24 hours (warn above 500)</li><li>CPU averaged over 30 seconds while nobody is playing anything (warn above 80 percent of a core)</li><li>Jellyfin playlist count against what jhub thinks it has mapped</li><li>A contract probe: three read-only calls the mirror depends on, checked for status and response shape against the last good run</li><li>Any worker warning repeated more than 50 times in a day</li></ul>
+<p>It pushes to the admins only when something warns, so green days are silent. The first dry run, over the old logs, reported 76,500 errors in 24 hours, 390 percent of a core used while idle, and 5,322 repeats of one worker warning. It would have flagged this on day one.</p>
+<h2 id="what-i-d-tell-another-engineer">What I'd tell another engineer</h2>
+<ul><li>Alert on symptoms you can measure from outside the feature: error volume, idle CPU, object counts. Those would have caught this bug and the next one.</li><li>Be suspicious of any fallback that turns a failure into a confident answer.</li><li>Your sync should be idempotent and bounded: edit in place, and put a rate limit on anything that deletes.</li><li>When an agent writes the fix, still write down what was not tested live. The first deploy is part of the test.</li></ul>
+      <p class="small muted blog-note">I design, direct and verify the projects I write about. The code is written by AI coding agents (Claude Code). These posts are about what I diagnosed, decided and checked. More on the project: <a href="/jhub/">the jhub case study</a>.</p>
+    </div>
+  </article>
+  <section class="blog-sec blog-more" aria-labelledby="more-h">
+    <div class="blog-wrap">
+      <h2 id="more-h">More build notes</h2>
+      <ul class="blog-more-list">
+        <li><a href="/blog/ai-agents-without-losing-control/">Building with AI agents without losing control</a> <span class="muted small">· 4 min</span></li>
+        <li><a href="/blog/speaker-played-nothing/">Why my speaker played nothing</a> <span class="muted small">· 4 min</span></li>
+      </ul>
+      <p class="cs-cta"><a class="btn" href="/blog/">All posts</a> <a class="btn" href="/#work">Back to projects</a></p>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p class="footer-contact">
+      <a href="mailto:jasmantan@hotmail.com">jasmantan@hotmail.com</a>
+      <a href="https://github.com/JasmanTan1" rel="me noopener">GitHub</a>
+      <a href="https://linkedin.com/in/jasmantan" rel="me noopener">LinkedIn</a>
+      
+    </p>
+    <p class="muted small">Jasman Tan · Singapore · Built as a static site; the source is on GitHub.</p>
+  </div>
+</footer>
+<script src="/main.js?v=46f493dd" defer></script>
+</body>
+</html>
