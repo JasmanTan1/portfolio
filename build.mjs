@@ -12,6 +12,7 @@ import {
   CONTACT_EMAIL, SITE, HERO, PROJECTS, INFRA, SKILLS, EXPERIENCE, CERTIFICATIONS, EDUCATION, DOING, WORKFLOW,
 } from './src/data.mjs';
 import { CASE_STUDY, caseStudyMain } from './src/jhub-case-study.mjs';
+import { loadPosts, blogIndexMain, postMain, feedXml, BLOG } from './src/blog.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dist = join(root, 'dist');
@@ -71,6 +72,7 @@ const head = ({ title, description, path = '/' }) => `<!doctype html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="/styles.css?v=${ver('styles.css')}">
+<link rel="alternate" type="application/rss+xml" href="/blog/feed.xml" title="${esc(SITE.name)} — Build notes">
 <link rel="alternate" type="text/markdown" href="/resume.md" title="Résumé (Markdown)">
 ${path === '/' || path === '/resume/' ? `<link rel="alternate" type="application/pdf" href="/resume.pdf" title="Résumé (PDF)">
 <script type="application/ld+json">${personLd}</script>` : ''}
@@ -213,6 +215,7 @@ const indexHtml = `${head({
       <a href="#build"><span class="nav-slash" aria-hidden="true">//</span> how i build</a>
       <a href="#stack"><span class="nav-slash" aria-hidden="true">//</span> stack</a>
       <a href="#experience"><span class="nav-slash" aria-hidden="true">//</span> experience</a>
+      <a href="/blog/"><span class="nav-slash" aria-hidden="true">//</span> blog</a>
       <a class="nav-keep" href="/resume/"><span class="nav-slash" aria-hidden="true">//</span> résumé</a>
     </nav>
     ${themeToggle}
@@ -404,7 +407,7 @@ const caseHtml = `${head({
 <header class="topbar">
   <div class="wrap topbar-inner">
     ${wordmark}
-    <nav aria-label="Sections"><a href="/#work">Back to portfolio</a></nav>
+    <nav aria-label="Sections"><a class="nav-keep" href="/blog/">Blog</a><a class="nav-keep" href="/#work">Back to portfolio</a></nav>
     ${themeToggle}
   </div>
 </header>
@@ -413,6 +416,34 @@ ${footer()}`;
 
 mkdirSync(join(dist, 'jhub'), { recursive: true });
 writeFileSync(join(dist, 'jhub', 'index.html'), caseHtml);
+
+/* ------------------------------------------------------------------- blog */
+
+const posts = loadPosts(join(root, 'content', 'blog'));
+const blogTopbar = `<a class="skip-link" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    ${wordmark}
+    <nav aria-label="Sections"><a class="nav-keep" href="/blog/">Blog</a><a class="nav-keep" href="/#work">Portfolio</a></nav>
+    ${themeToggle}
+  </div>
+</header>`;
+
+mkdirSync(join(dist, 'blog'), { recursive: true });
+writeFileSync(join(dist, 'blog', 'index.html'), `${head({ title: `${BLOG.title} — ${SITE.name}`, description: BLOG.description, path: '/blog/' })}
+<body class="blog-page">
+${blogTopbar}
+${blogIndexMain(posts)}
+${footer()}`);
+for (const p of posts) {
+  mkdirSync(join(dist, 'blog', p.slug), { recursive: true });
+  writeFileSync(join(dist, 'blog', p.slug, 'index.html'), `${head({ title: `${p.title} — ${SITE.name}`, description: p.summary, path: `/blog/${p.slug}/` })}
+<body class="blog-page">
+${blogTopbar}
+${postMain(p, posts)}
+${footer()}`);
+}
+writeFileSync(join(dist, 'blog', 'feed.xml'), feedXml(posts, SITE.origin, SITE.name));
 
 /* ------------------------------------------------------- static + plumbing */
 
@@ -433,6 +464,8 @@ writeFileSync(
   <url><loc>${SITE.origin}/</loc><lastmod>${today}</lastmod></url>
   <url><loc>${SITE.origin}/resume/</loc><lastmod>${today}</lastmod></url>
   <url><loc>${SITE.origin}/jhub/</loc><lastmod>${today}</lastmod></url>
+  <url><loc>${SITE.origin}/blog/</loc><lastmod>${posts[0].date}</lastmod></url>
+${posts.map((p) => `  <url><loc>${SITE.origin}/blog/${p.slug}/</loc><lastmod>${p.date}</lastmod></url>`).join('\n')}
 </urlset>
 `
 );
