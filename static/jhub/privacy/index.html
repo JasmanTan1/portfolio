@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jhub for Android: privacy policy</title>
+<meta name="description" content="Privacy policy for the jhub Android app by Jasman-Studio.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  :root { --bg:#ffffff; --fg:#1b1d22; --muted:#5d6370; --line:#e3e5ea; --accent:#3d5afe; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#111317; --fg:#e8eaee; --muted:#9aa1ad; --line:#262a31; --accent:#8c9eff; } }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.65 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width:720px; margin:0 auto; padding:40px 16px 64px; }
+  h1 { font-size:1.8rem; line-height:1.25; margin:0 0 4px; }
+  h2 { font-size:1.15rem; margin:32px 0 8px; padding-top:16px; border-top:1px solid var(--line); }
+  p.meta { color:var(--muted); margin:0 0 24px; }
+  ul { padding-left:20px; } li { margin:6px 0; }
+  a { color:var(--accent); }
+</style>
+</head>
+<body>
+<main>
+<h1>jhub for Android: privacy policy</h1>
+<p class="meta">Jasman-Studio · Last updated: 22 October 2026</p>
+
+<h2>Who this app is for</h2>
+<p>jhub is a private app for one family. It connects only to the family's own jhub server, which is reachable only inside the family's private network (a VPN). The app is not offered to the public and has no accounts of its own: you sign in with the account the family's server already gave you.</p>
+
+<h2>What the app stores on your phone</h2>
+<ul>
+<li><strong>Your sign-in.</strong> After you sign in, the app keeps the server's session cookie on the phone, encrypted with a key held in the Android Keystore. It is never put in a backup and never moved to a new phone (Android backup and device transfer are switched off for the app).</li>
+<li><strong>Your music queue and the plays still to send</strong>, so music can resume after a restart and a play is counted even if the server was out of reach for a while. They are kept per person and deleted from the phone's player when someone else signs in.</li>
+<li><strong>Song covers, posters and audio for the next few songs</strong>, cached so the app opens quickly and music keeps playing through short network drops. The cache is kept per person and emptied when you sign out or another person signs in.</li>
+<li><strong>The home-screen widget's state</strong>: the current song's title, artist and a small copy of its cover. It is cleared when you sign out.</li>
+<li><strong>A short playback log</strong> (the last 300 player events: times, song numbers, player states; no addresses, no passwords, no cookies). It stays on the phone. It leaves the phone only if you choose <em>Share playback log</em> or <em>Copy playback log</em> yourself.</li>
+</ul>
+
+<h2>What the app sends, and to whom</h2>
+<ul>
+<li><strong>To the family's own jhub server only:</strong> your sign-in, the requests the app makes for pages, songs, covers and lyrics, and the songs you played (so they count in your history). Nothing is sent to any other server by the app itself.</li>
+<li><strong>Casting:</strong> if you choose to cast music to a speaker on your home network, the speaker receives the song from the family's server.</li>
+<li><strong>No advertising, no analytics, no tracking.</strong> The app contains no advertising or analytics SDK and does not build a profile of you.</li>
+<li><strong>Google Play</strong> may collect crash and performance reports (Android vitals) for apps installed from Play. That is governed by Google's privacy policy; the app does not add anything to it.</li>
+</ul>
+
+<h2>Permissions</h2>
+<ul>
+<li><strong>Internet</strong> to reach the family's server.</li>
+<li><strong>Notifications</strong> (Android 13 and later) for the music player's notification and lock-screen controls.</li>
+<li><strong>Foreground service: media playback</strong> and <strong>wake lock</strong>, so music keeps playing with the screen off.</li>
+<li>No location, contacts, camera, microphone, photos or files permissions.</li>
+</ul>
+
+<h2>Deleting your data</h2>
+<ul>
+<li>On the phone: <strong>Sign out</strong> (Settings &gt; Devices) removes your sign-in, your cached music and posters, and the widget's song. Uninstalling the app removes everything it stored.</li>
+<li>On the server: the family's server administrator can remove your account and its history.</li>
+</ul>
+
+<h2>Children</h2>
+<p>The app is for a family's own members; it does not knowingly collect anything from children beyond what the family's own server holds.</p>
+
+<h2>Contact</h2>
+<p>Questions about this policy: <a href="mailto:support@jasmantan.com">support@jasmantan.com</a></p>
+</main>
+</body>
+</html>
