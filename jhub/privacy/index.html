@@ -21,7 +21,7 @@
 <body>
 <main>
 <h1>jhub for Android: privacy policy</h1>
-<p class="meta">Jasman-Studio · Last updated: 22 October 2026</p>
+<p class="meta">Jasman-Studio · Last updated: 23 October 2026</p>
 
 <h2>Who this app is for</h2>
 <p>jhub is a private app for one family. It connects only to the family's own jhub server, which is reachable only inside the family's private network (a VPN). The app is not offered to the public and has no accounts of its own: you sign in with the account the family's server already gave you.</p>
@@ -37,8 +37,11 @@
 
 <h2>What the app sends, and to whom</h2>
 <ul>
-<li><strong>To the family's own jhub server only:</strong> your sign-in, the requests the app makes for pages, songs, covers and lyrics, and the songs you played (so they count in your history). Nothing is sent to any other server by the app itself.</li>
+<li><strong>To the family's own jhub server:</strong> your sign-in, the requests the app makes for pages, songs, covers and lyrics, the songs you played (so they count in your history), and, only if you turn notifications on, the push token described below.</li>
+<li><strong>A device identifier, at sign-in.</strong> So the server can recognise the same phone again after a reinstall, instead of listing it twice, the app sends a code made from the phone's Android ID: a SHA-256 hash with a fixed salt, shortened. The Android ID itself never leaves the phone. The phone's model name is sent with it, to label the device in Settings &gt; Devices. The code goes only to the family's server; it is not shared with anyone, not used for advertising and not used to track you across apps. If the phone gives no usable ID, the app uses a random code kept in its own storage instead.</li>
+<li><strong>Push notifications (only if you turn them on).</strong> The app asks for notification permission and registers with Firebase Cloud Messaging (Google) only after you switch notifications on; nothing is registered before that. The push token Google issues is sent to the family's jhub server, which uses it to ask Google to deliver a push to this phone. A push carries no content: Google delivers only a notification type and an opaque id, and the phone then fetches the real text from the family's server with your own sign-in. Titles and messages never pass through Google. Turning notifications off, or signing out, removes the token from the server and deletes it at Firebase.</li>
 <li><strong>Casting:</strong> if you choose to cast music to a speaker on your home network, the speaker receives the song from the family's server.</li>
+<li><strong>Karaoke ("Sing on this phone"):</strong> the microphone is used to score your singing. The audio is analysed live on the phone, is not recorded, not stored and not sent to the family's server or anyone else. Only three numbers (the score, pitch accuracy and timing accuracy) go to the family's server.</li>
 <li><strong>No advertising, no analytics, no tracking.</strong> The app contains no advertising or analytics SDK and does not build a profile of you.</li>
 <li><strong>Google Play</strong> may collect crash and performance reports (Android vitals) for apps installed from Play. That is governed by Google's privacy policy; the app does not add anything to it.</li>
 </ul>
@@ -46,14 +49,15 @@
 <h2>Permissions</h2>
 <ul>
 <li><strong>Internet</strong> to reach the family's server.</li>
-<li><strong>Notifications</strong> (Android 13 and later) for the music player's notification and lock-screen controls.</li>
+<li><strong>Notifications</strong> (Android 13 and later) for the music player's notification and lock-screen controls, and for push notifications if you turn them on.</li>
+<li><strong>Microphone</strong> (record audio, with a related audio-settings permission that Android's web view needs), only for karaoke. Android asks the first time you tap "Sing on this phone", never when the app starts. The app lets only jhub's own pages use the microphone, and nothing else (no camera, no video). You can refuse it, and the rest of the app works without it.</li>
 <li><strong>Foreground service: media playback</strong> and <strong>wake lock</strong>, so music keeps playing with the screen off.</li>
-<li>No location, contacts, camera, microphone, photos or files permissions.</li>
+<li>No location, contacts, camera, photos or files permissions.</li>
 </ul>
 
 <h2>Deleting your data</h2>
 <ul>
-<li>On the phone: <strong>Sign out</strong> (Settings &gt; Devices) removes your sign-in, your cached music and posters, and the widget's song. Uninstalling the app removes everything it stored.</li>
+<li>On the phone: <strong>Sign out</strong> (Settings &gt; Devices) removes your sign-in, your cached music and posters, and the widget's song, and unregisters the phone's push token. Uninstalling the app removes everything it stored.</li>
 <li>On the server: the family's server administrator can remove your account and its history.</li>
 </ul>
 
