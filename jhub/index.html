@@ -51,10 +51,10 @@
       <p class="cs-lede">A self-hosted family media hub: films, shows, music and videos for each person in the family, on every phone including iPhone, reachable only over a private network.</p>
       <p class="cs-role"><strong>My role.</strong> Designed and directed; built with AI coding agents (Claude Code). I wrote the specs, made the design decisions, debugged from logs, and reviewed and verified every change. I did not hand-write the TypeScript.</p>
       <ul class="cs-facts" aria-label="jhub in numbers">
-        <li><strong>~3,200</strong><span>server tests</span></li>
-        <li><strong>~930</strong><span>web tests</span></li>
+        <li><strong>5,000+</strong><span>server tests</span></li>
+        <li><strong>2,000+</strong><span>web tests</span></li>
         <li><strong>100</strong><span>written decision records</span></li>
-        <li><strong>500+</strong><span>commits since late Sept 2026</span></li>
+        <li><strong>1,100+</strong><span>commits since late Sept 2026</span></li>
       </ul>
       <ul class="stack" aria-label="jhub stack"><li>TypeScript</li><li>Fastify</li><li>React PWA</li><li>SQLite</li><li>Jellyfin</li><li>Navidrome</li><li>Tailscale</li><li>Playwright</li><li>Docker Compose</li><li>systemd</li></ul>
     </div>
@@ -164,8 +164,8 @@
         <h3 class="cs-h3">4. Working with AI agents safely</h3>
         <dl class="cs-trio">
           <div><dt>Situation</dt><dd>Most of the code is written by AI coding agents, and a bad merge would break something my family uses every day.</dd></div>
-          <div><dt>What I did</dt><dd>Each job starts as a written brief: numbered items, what the agent must not touch, how the result will be checked. Agents work on their own git branches and never merge or deploy; I do that. Every agent reports with test output, and I verify the claim (run the tests, open the screens at phone and desktop width, read the diff) instead of trusting it. The test gate is about 3,200 server and 930 web tests, plus Playwright end-to-end tests that run against a separate test instance with its own database, never the live one. Each non-trivial change gets a written decision record with a rollback note.</dd></div>
-          <div><dt>Result</dt><dd>Over 500 commits in a few weeks with a working app in daily use. The log-reading in story 1 and the test discipline in story 2 are the parts of this work that were mine.</dd></div>
+          <div><dt>What I did</dt><dd>Each job starts as a written brief: numbered items, what the agent must not touch, how the result will be checked. Agents work on their own git branches and never merge or deploy; I do that. Every agent reports with test output, and I verify the claim (run the tests, open the screens at phone and desktop width, read the diff) instead of trusting it. The test gate is about 5,000 server and 2,000 web tests, plus Playwright end-to-end tests that run against a separate test instance with its own database, never the live one. Each non-trivial change gets a written decision record with a rollback note.</dd></div>
+          <div><dt>Result</dt><dd>Over 1,100 commits in about six weeks with a working app in daily use. The log-reading in story 1 and the test discipline in story 2 are the parts of this work that were mine.</dd></div>
         </dl>
         <p class="small muted cs-lesson">A green exit code is not evidence. I check the end state.</p>
       </article>
