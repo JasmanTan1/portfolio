@@ -11,10 +11,10 @@ export const CASE_STUDY = {
     'A self-hosted family media hub: films, shows, music and videos for each person in the family, on every phone including iPhone, reachable only over a private network.',
   role: 'Designed and directed; built with AI coding agents (Claude Code). I wrote the specs, made the design decisions, debugged from logs, and reviewed and verified every change. I did not hand-write the TypeScript.',
   facts: [
-    ['~3,200', 'server tests'],
-    ['~930', 'web tests'],
+    ['5,000+', 'server tests'],
+    ['2,000+', 'web tests'],
     ['100', 'written decision records'],
-    ['500+', 'commits since late Sept 2026'],
+    ['1,100+', 'commits since late Sept 2026'],
   ],
   stackChips: ['TypeScript', 'Fastify', 'React PWA', 'SQLite', 'Jellyfin', 'Navidrome', 'Tailscale', 'Playwright', 'Docker Compose', 'systemd'],
   why: [
@@ -55,8 +55,8 @@ export const CASE_STUDY = {
     {
       h: '4. Working with AI agents safely',
       situation: 'Most of the code is written by AI coding agents, and a bad merge would break something my family uses every day.',
-      did: 'Each job starts as a written brief: numbered items, what the agent must not touch, how the result will be checked. Agents work on their own git branches and never merge or deploy; I do that. Every agent reports with test output, and I verify the claim (run the tests, open the screens at phone and desktop width, read the diff) instead of trusting it. The test gate is about 3,200 server and 930 web tests, plus Playwright end-to-end tests that run against a separate test instance with its own database, never the live one. Each non-trivial change gets a written decision record with a rollback note.',
-      result: 'Over 500 commits in a few weeks with a working app in daily use. The log-reading in story 1 and the test discipline in story 2 are the parts of this work that were mine.',
+      did: 'Each job starts as a written brief: numbered items, what the agent must not touch, how the result will be checked. Agents work on their own git branches and never merge or deploy; I do that. Every agent reports with test output, and I verify the claim (run the tests, open the screens at phone and desktop width, read the diff) instead of trusting it. The test gate is about 5,000 server and 2,000 web tests, plus Playwright end-to-end tests that run against a separate test instance with its own database, never the live one. Each non-trivial change gets a written decision record with a rollback note.',
+      result: 'Over 1,100 commits in about six weeks with a working app in daily use. The log-reading in story 1 and the test discipline in story 2 are the parts of this work that were mine.',
       lesson: 'A green exit code is not evidence. I check the end state.',
     },
 
