@@ -381,7 +381,6 @@ const resumeHtml = `${head({
     <p class="resume-bar-actions">
       ${hasPdf ? `<a class="btn btn-primary" href="/resume.pdf" download="Jasman-Tan-Resume.pdf">Download PDF</a>` : ''}
       <button class="btn${hasPdf ? '' : ' btn-primary'}" type="button" id="print-resume">${hasPdf ? 'Print' : 'Save as PDF / print'}</button>
-      <a class="btn" href="/resume.md" download="jasman-tan-resume.md">Markdown source</a>
     </p>
   </div>
 </div>
