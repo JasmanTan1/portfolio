@@ -378,7 +378,6 @@ const resumeHtml = `${head({
 </header>
 <div class="resume-bar no-print">
   <div class="wrap">
-    <p>This page is the résumé.${hasPdf ? ' The PDF is printed from this very page, so the two can never disagree.' : ' <strong>Print it, or save it as PDF</strong> — the print stylesheet lays it out for A4 with no navigation or colour.'}</p>
     <p class="resume-bar-actions">
       ${hasPdf ? `<a class="btn btn-primary" href="/resume.pdf" download="Jasman-Tan-Resume.pdf">Download PDF</a>` : ''}
       <button class="btn${hasPdf ? '' : ' btn-primary'}" type="button" id="print-resume">${hasPdf ? 'Print' : 'Save as PDF / print'}</button>
